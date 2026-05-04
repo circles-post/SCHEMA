@@ -1,0 +1,96 @@
+{
+  "triples": 4488,
+  "chunks": 11224,
+  "sampled_subgraphs": 32,
+  "accepted_questions": 15,
+  "validation": {
+    "passed": 15
+  },
+  "question_types": [
+    "claim_choice",
+    "boolean_support",
+    "two_hop_tail",
+    "essay"
+  ],
+  "validation_mode": "rule_only",
+  "experiment_difficulty": "medium",
+  "experiment_blueprint_breakdown": {},
+  "benchmark_weight": {
+    "config": {
+      "metric": "pagerank_log_percentile",
+      "alpha": 0.85,
+      "anchor_policy": "two_hop_middle_else_tail",
+      "tier_cutoffs": {
+        "T1": 0.8,
+        "T2": 0.2
+      },
+      "weights": {
+        "T1": 1.5,
+        "T2": 1.0,
+        "T3": 0.5,
+        "T3_not_in_graph": 0.5
+      },
+      "not_found_policy": "tier=T3_not_in_graph, weight=0.5 (pruned ≈ niche)"
+    },
+    "tier_breakdown": {
+      "T3_not_in_graph": 11,
+      "T2": 2,
+      "T1": 2
+    },
+    "match_strategy_breakdown": {
+      "not_found": 11,
+      "direct": 4
+    },
+    "graph_path": "benchmark_runs/proteinlmbench_full_graphbench/global_graph.graphml",
+    "graph_node_count": 1112,
+    "graph_alias_count": 241
+  },
+  "question_type_quotas": {
+    "declared_ratios": {
+      "claim_choice": 0.25,
+      "two_hop_tail": 0.25,
+      "essay": 0.25,
+      "boolean_support": 0.25
+    },
+    "effective_quotas": {
+      "claim_choice": 10,
+      "two_hop_tail": 10,
+      "essay": 10,
+      "boolean_support": 10
+    },
+    "per_type_pool": {
+      "claim_choice": 58,
+      "boolean_support": 32,
+      "essay": 58,
+      "two_hop_tail": 2
+    },
+    "per_type_selected": {
+      "boolean_support": 10,
+      "claim_choice": 10,
+      "essay": 10,
+      "two_hop_tail": 2
+    }
+  },
+  "coverage": {
+    "coverage_mode": "greedy",
+    "graph_path": "benchmark_runs/proteinlmbench_full_graphbench/global_graph.graphml",
+    "total_graph_nodes": 1112,
+    "covered_nodes": 9,
+    "node_coverage_rate": 0.0081,
+    "total_graph_edges": 2203,
+    "covered_edges": 2,
+    "edge_coverage_rate": 0.0009,
+    "per_type_new_nodes": {
+      "boolean_support": 0,
+      "claim_choice": 0,
+      "essay": 0,
+      "two_hop_tail": 0
+    },
+    "per_type_new_edges": {
+      "boolean_support": 0,
+      "claim_choice": 0,
+      "essay": 0,
+      "two_hop_tail": 0
+    }
+  }
+}

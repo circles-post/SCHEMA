@@ -1,0 +1,21 @@
+{
+  "status": "corroborated",
+  "external_sources": [
+    {
+      "tool": "literature_search",
+      "title": "RNF39 mediates K48-linked ubiquitination of DDX3X and inhibits RLR-dependent antiviral immunity",
+      "doi": "N/A",
+      "url": "",
+      "snippet": "Retinoic acid-inducible gene-I (RIG-I)-like receptors (RLRs) are major cytosolic RNA sensors and play crucial roles in initiating antiviral innate immunity. Furthermore, RLRs have been implicated in multiple autoimmune disorders. Thus, RLR activation should be tightly controlled to avoid detrimental effects. DEAD-box RNA helicase 3, X-linked (DDX3X) is a key adaptor in RLR signaling, but its regulatory mechanisms remain unknown. Here, we show that the E3 ubiquitin ligase RNF39 inhibits RLR pathw",
+      "venue": "N/A",
+      "year": "N/A",
+      "retrieved_at": "2026-04-20T16:20:58Z"
+    }
+  ],
+  "tools_used": [
+    "literature_search"
+  ],
+  "issue_tags": [],
+  "short_rationale": "literature_search returned 1 external papers",
+  "elapsed_seconds": 0.36
+}

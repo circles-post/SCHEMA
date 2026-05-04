@@ -1,0 +1,15 @@
+{
+  "dataset": "ProteinLMBench",
+  "start": 0,
+  "limit": 2,
+  "evaluated": 2,
+  "available_total": 944,
+  "metrics": {
+    "accuracy": 1.0,
+    "correct": 2,
+    "total": 2
+  },
+  "wrong_count": 0,
+  "predictions_file": "/mnt/shared-storage-user/fengxinshun/AISci/AgentDebug/agdebugger/debug_workflow/test_output_e2e/predictions.jsonl",
+  "wrong_questions_file": "/mnt/shared-storage-user/fengxinshun/AISci/AgentDebug/agdebugger/debug_workflow/test_output_e2e/wrong_questions.jsonl"
+}

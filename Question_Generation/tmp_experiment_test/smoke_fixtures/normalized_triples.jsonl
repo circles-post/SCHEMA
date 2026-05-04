@@ -1,0 +1,4 @@
+{"doc_id": "PMID:0001", "chunk_id": "chunk_001", "head": "MDM2", "head_type": "Gene", "surface_relation": "inhibits", "normalized_relation": "inhibits", "tail": "TP53", "tail_type": "Gene", "confidence": 0.95, "evidence": "MDM2 inhibits TP53"}
+{"doc_id": "PMID:0002", "chunk_id": "chunk_002", "head": "MDM2", "head_type": "Gene", "surface_relation": "inhibits", "normalized_relation": "inhibits", "tail": "TP53", "tail_type": "Gene", "confidence": 0.93, "evidence": "MDM2 inhibits TP53"}
+{"doc_id": "PMID:0003", "chunk_id": "chunk_003", "head": "MDM2", "head_type": "Gene", "surface_relation": "inhibits", "normalized_relation": "inhibits", "tail": "MYC", "tail_type": "Gene", "confidence": 0.91, "evidence": "MDM2 inhibits MYC"}
+{"doc_id": "PMID:0004", "chunk_id": "chunk_004", "head": "MDM2", "head_type": "Gene", "surface_relation": "inhibits", "normalized_relation": "inhibits", "tail": "MYC", "tail_type": "Gene", "confidence": 0.9, "evidence": "MDM2 inhibits MYC"}

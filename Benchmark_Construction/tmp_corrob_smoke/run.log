@@ -1,0 +1,32 @@
+[2026-04-21 00:20:47 INFO] logging to tmp_corrob_smoke/run.log
+[2026-04-21 00:20:47 INFO] === question_generation start ===
+[2026-04-21 00:20:47 INFO] triples=benchmark_runs/proteinlmbench_full_graphbench/normalized_triples.jsonl  chunks=benchmark_runs/proteinlmbench_full_graphbench/chunks.jsonl  max_samples=8  max_per_key=1
+[2026-04-21 00:20:47 INFO] question_types=['claim_choice', 'one_hop_tail', 'boolean_support']  validation_mode=rule_only  validator_enabled=False
+[2026-04-21 00:20:47 INFO] experiment_difficulty=medium  llm_code_selection=auto
+[2026-04-21 00:20:47 INFO] [phase 1/6] loading triples
+[2026-04-21 00:20:47 INFO] [phase 1/6] loaded 4488 triples
+[2026-04-21 00:20:47 INFO] [phase 2/6] loading chunks
+[2026-04-21 00:20:47 INFO] [phase 2/6] loaded 11224 chunks
+[2026-04-21 00:20:47 INFO] [phase 3/6] building index
+[2026-04-21 00:20:47 INFO] [phase 3/6] index ready (triples=4488, entity_types=15)
+[2026-04-21 00:20:47 INFO] validator: enabled=False model=intern-s1-pro base_url=https://chat.intern-ai.org.cn/api/v1/ api_key=set
+[2026-04-21 00:20:47 INFO] corroboration agent ready: min_external_sources=1 timeout=60s cache_dir=tmp_corrob_smoke/cache
+[2026-04-21 00:20:47 INFO] [phase 4/6] sampling subgraphs
+[2026-04-21 00:20:47 INFO] [phase 4/6] sampled 8 subgraphs total
+[2026-04-21 00:20:47 INFO] [phase 5/6] pre-filtering by uniqueness key (max_per_key=1)
+[2026-04-21 00:20:47 INFO] [phase 5/6] 8 candidates after key-dedup (0 skipped), workers=2
+[2026-04-21 00:20:47 INFO] [phase 5/6] generating + validating: 8 non-experiment (workers=2) + 0 experiment_code (workers=2)
+[2026-04-21 00:20:53 INFO]   [1/8] qg_000001 PASS type=claim_choice vmode=corroborated build=0.0s validate=5.6s  (accepted=1 rejected=0)
+[2026-04-21 00:20:54 INFO]   [2/8] qg_000002 PASS type=claim_choice vmode=corroborated build=0.0s validate=6.6s  (accepted=2 rejected=0)
+[2026-04-21 00:20:57 INFO]   [3/8] qg_000003 PASS type=claim_choice vmode=corroborated build=0.0s validate=4.2s  (accepted=3 rejected=0)
+[2026-04-21 00:20:57 INFO]   [4/8] qg_000004 PASS type=one_hop_tail vmode=corroborated build=0.0s validate=3.4s  (accepted=4 rejected=0)
+[2026-04-21 00:20:57 INFO]   [5/8] qg_000005 PASS type=boolean_support vmode=corroborated build=0.0s validate=0.5s  (accepted=5 rejected=0)
+[2026-04-21 00:20:58 INFO]   [6/8] qg_000006 PASS type=claim_choice vmode=corroborated build=0.0s validate=0.4s  (accepted=6 rejected=0)
+[2026-04-21 00:20:58 INFO]   [7/8] qg_000007 PASS type=claim_choice vmode=corroborated build=0.0s validate=0.4s  (accepted=7 rejected=0)
+[2026-04-21 00:20:58 INFO]   [8/8] qg_000008 PASS type=one_hop_tail vmode=corroborated build=0.0s validate=0.3s  (accepted=8 rejected=0)
+[2026-04-21 00:20:58 INFO] [phase 5/6] done: accepted=8 rejected=0 skipped_dup=0  types={'claim_choice': 5, 'one_hop_tail': 2, 'boolean_support': 1}
+[2026-04-21 00:20:58 INFO] [phase 6/6] dedup + export
+[2026-04-21 00:20:58 INFO] [phase 6/6] dedup: 8 -> 8
+[2026-04-21 00:20:58 INFO] [phase 6/6] wrote tmp_corrob_smoke/samples.jsonl (8 samples)
+[2026-04-21 00:20:58 INFO] [phase 6/6] wrote tmp_corrob_smoke/summary.json
+[2026-04-21 00:20:58 INFO] === question_generation done in 11.3s: 8 samples ===

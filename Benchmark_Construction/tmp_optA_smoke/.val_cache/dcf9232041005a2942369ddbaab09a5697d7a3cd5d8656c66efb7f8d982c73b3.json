@@ -1,0 +1,12 @@
+{
+  "verdict": "supported",
+  "confidence_band": "high",
+  "support_score": 0.85,
+  "contradiction_score": 0.05,
+  "supporting_evidence_ids": [
+    "10.3389/fonc.2022.842418"
+  ],
+  "contradicting_evidence_ids": [],
+  "issue_tags": [],
+  "short_rationale": "The evidence from the provided document explicitly states that increased GRP78 promotes radiation resistance in head and neck cancer cells, and that this effect can be transferred via extracellular vesicles. This directly supports the candidate statement regarding an association between GRP78 and radiation resistance. No contradictory evidence is present in the bundle."
+}

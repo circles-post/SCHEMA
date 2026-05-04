@@ -1,0 +1,35 @@
+[2026-04-21 19:22:19 INFO] logging to tmp_vqa_smoke/run.log
+[2026-04-21 19:22:19 INFO] === question_generation start ===
+[2026-04-21 19:22:19 INFO] triples=benchmark_runs/protein_plus_pathvqa_500_v3/_incremental/normalized_triples.jsonl  chunks=benchmark_runs/protein_plus_pathvqa_500_v3/_incremental/chunks.jsonl  max_samples=1  max_per_key=1
+[2026-04-21 19:22:19 INFO] question_types=['vqa']  validation_mode=rule_only  validator_enabled=False
+[2026-04-21 19:22:19 INFO] experiment_difficulty=medium  llm_code_selection=auto
+[2026-04-21 19:22:19 INFO] [phase 1/6] loading triples
+[2026-04-21 19:22:19 INFO] [phase 1/6] loaded 2882 triples
+[2026-04-21 19:22:19 INFO] [phase 2/6] loading chunks
+[2026-04-21 19:22:20 INFO] [phase 2/6] loaded 15610 chunks
+[2026-04-21 19:22:20 INFO] [phase 3/6] building index
+[2026-04-21 19:22:20 INFO] [phase 3/6] index ready (triples=2882, entity_types=15)
+[2026-04-21 19:22:20 INFO] validator: enabled=False model=intern-s1-pro base_url=https://chat.intern-ai.org.cn/api/v1/ api_key=set
+[2026-04-21 19:22:20 INFO] [phase 4/6] sampling subgraphs
+[2026-04-21 19:22:20 INFO] vqa_source: loaded 564 records (dropped: non_selfloop=3, no_image=0, malformed=0)
+[2026-04-21 19:22:20 INFO] [phase 4/6] vqa added 10 candidates (from 564 records)
+[2026-04-21 19:22:20 INFO] [phase 4/6] sampled 10 subgraphs total
+[2026-04-21 19:22:20 INFO] [phase 5/6] pre-filtering by uniqueness key (max_per_key=1)
+[2026-04-21 19:22:20 INFO] [phase 5/6] 10 candidates after key-dedup (0 skipped), workers=1
+[2026-04-21 19:22:20 INFO] [phase 5/6] generating + validating: 10 non-experiment (workers=1) + 0 experiment_code (workers=1)
+[2026-04-21 19:22:20 INFO]   [1/10] qg_000001 PASS type=vqa vmode=rule_only build=0.0s validate=0.0s  (accepted=1 rejected=0)
+[2026-04-21 19:22:20 INFO]   [2/10] qg_000002 PASS type=vqa vmode=rule_only build=0.0s validate=0.0s  (accepted=2 rejected=0)
+[2026-04-21 19:22:20 INFO]   [3/10] qg_000003 PASS type=vqa vmode=rule_only build=0.0s validate=0.0s  (accepted=3 rejected=0)
+[2026-04-21 19:22:20 INFO]   [4/10] qg_000004 PASS type=vqa vmode=rule_only build=0.0s validate=0.0s  (accepted=4 rejected=0)
+[2026-04-21 19:22:20 INFO]   [5/10] qg_000005 PASS type=vqa vmode=rule_only build=0.0s validate=0.0s  (accepted=5 rejected=0)
+[2026-04-21 19:22:20 INFO]   [6/10] qg_000006 PASS type=vqa vmode=rule_only build=0.0s validate=0.0s  (accepted=6 rejected=0)
+[2026-04-21 19:22:20 INFO]   [7/10] qg_000007 PASS type=vqa vmode=rule_only build=0.0s validate=0.0s  (accepted=7 rejected=0)
+[2026-04-21 19:22:20 INFO]   [8/10] qg_000008 PASS type=vqa vmode=rule_only build=0.0s validate=0.0s  (accepted=8 rejected=0)
+[2026-04-21 19:22:20 INFO]   [9/10] qg_000009 PASS type=vqa vmode=rule_only build=0.0s validate=0.0s  (accepted=9 rejected=0)
+[2026-04-21 19:22:20 INFO]   [10/10] qg_000010 PASS type=vqa vmode=rule_only build=0.0s validate=0.0s  (accepted=10 rejected=0)
+[2026-04-21 19:22:20 INFO] [phase 5/6] done: accepted=10 rejected=0 skipped_dup=0  types={'vqa': 10}
+[2026-04-21 19:22:20 INFO] [phase 6/6] dedup + export
+[2026-04-21 19:22:20 INFO] [phase 6/6] dedup: 10 -> 10
+[2026-04-21 19:22:20 INFO] [phase 6/6] wrote tmp_vqa_smoke/samples.jsonl (10 samples)
+[2026-04-21 19:22:20 INFO] [phase 6/6] wrote tmp_vqa_smoke/summary.json
+[2026-04-21 19:22:20 INFO] === question_generation done in 0.5s: 10 samples ===

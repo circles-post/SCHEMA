@@ -1,0 +1,8 @@
+=== run_20260421_185626_w0_idx7 / V1_evidence_gap / outcome=ok ===
+
+[init_answer] option1
+[ground_truth] option 3
+[target_turn] 7
+
+[rewritten_text]
+Wait — my reasoning assumed that a plasmid-based expression system was used to construct and produce the BA.2 RBD with N460K mutation and the BA.2.75 spike (S1). The evidence actually shows no support for this method; it doesn't establish which expression system was used at all (S2). My assumption required the plasmid-based method but the evidence establishes only that the pseudoviruses were generated; it does NOT establish the specific expression system (S3). I should therefore re-match each listed production method against what the evidence actually establishes about pseudovirus generation (S4).

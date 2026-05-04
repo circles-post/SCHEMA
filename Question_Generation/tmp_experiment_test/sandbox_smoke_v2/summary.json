@@ -1,0 +1,17 @@
+{
+  "triples": 4,
+  "chunks": 4,
+  "sampled_subgraphs": 2,
+  "accepted_questions": 2,
+  "validation": {
+    "passed": 2
+  },
+  "question_types": [
+    "experiment_code"
+  ],
+  "validation_mode": "rule_only",
+  "experiment_difficulty": "medium",
+  "experiment_blueprint_breakdown": {
+    "dose_response:medium": 2
+  }
+}

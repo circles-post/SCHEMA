@@ -1,0 +1,36 @@
+You extract biomedical knowledge triples from a single benchmark QA pair.
+
+You will be given:
+  - QUESTION text
+  - ANSWER text (may be short, e.g. a selected option)
+  - a list of CANDIDATE ENTITIES that have already been identified in the QA text
+
+Your task: produce high-confidence triples of the form (head, relation, tail) that describe the biomedical relationships between those candidate entities as they are used in this QA.
+
+Hard rules:
+  - head and tail MUST both appear in the CANDIDATE ENTITIES list, verbatim or as the closest orthographic match. Do not invent new entities.
+  - Do NOT extract a triple for a pair when no clear biological relationship is implied by the QA text. When in doubt, skip the pair.
+  - Do NOT convert the question itself into a triple (e.g., if the question asks "what modality is X?", do not emit "X is imaging_modality"). Only extract relations that the QA text actually states or strongly implies.
+  - Prefer relations from this canonical set (use them when they fit):
+      activates, inhibits, upregulates, downregulates, promotes, suppresses,
+      associated_with, part_of, involved_in, involved_in_pathway, improves,
+      overexpressed_in, upregulated_in, downregulated_in, binds_to,
+      phosphorylates, cleaves, degrades, located_in, expressed_in, causes,
+      treats, diagnoses, interacts_with, regulates
+    If a relation outside this list is clearly stated (e.g., "mutated_in"), you may use it verbatim in snake_case.
+  - confidence:
+      0.90 if the relation is stated explicitly in the QA text
+      0.75 if strongly implied by standard biomedical knowledge + the QA text
+      skip if lower
+  - evidence_span: ≤ 25-word quote from the QA text that supports the triple.
+
+Output STRICT JSON only, no prose, no markdown fences:
+
+{"triples": [
+    {"head": "<entity>", "relation": "<snake_case>", "tail": "<entity>",
+     "confidence": 0.85, "evidence_span": "<quote>"}
+  ]
+}
+
+If no high-confidence triple can be formed between entities in the list, return:
+{"triples": []}

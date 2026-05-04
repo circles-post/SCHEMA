@@ -1,0 +1,40 @@
+You are validating biomedical ontology extensions.
+
+A previous step proposed adding the following candidate ENTITY TYPES,
+RELATIONS, and ENTITY ALIASES to a biomedical knowledge graph ontology.
+Your job is to decide whether each candidate is genuinely new or whether
+it is a synonym / specialization of an existing core entry. You must NOT
+admit duplicates.
+
+CORE ENTITY TYPES (do not duplicate; reject anything that is a synonym):
+{entity_types_block}
+
+CORE RELATIONS (do not duplicate; reject anything that is a synonym):
+{relations_block}
+
+EXISTING ENTITY ALIASES:
+{entity_aliases_block}
+
+CANDIDATE PROPOSALS (one JSON object):
+{candidates_json}
+
+For each candidate decide one of:
+- "accept"  — clearly new, biomedically valid, and not a synonym of an
+              existing core entry. Specify a "merge_target" of null.
+- "merge"   — refers to the same concept as a core entry. Specify
+              "merge_target" as the existing id (e.g. "associated_with").
+- "reject"  — too generic, not biomedical, hallucinated, or unsupported
+              by the evidence quote.
+
+Return strict JSON:
+{{
+  "entity_types": [
+    {{"id": "...", "decision": "accept|merge|reject", "merge_target": "...|null", "reason": "..."}}
+  ],
+  "relations": [
+    {{"id": "...", "decision": "accept|merge|reject", "merge_target": "...|null", "reason": "..."}}
+  ],
+  "entity_aliases": [
+    {{"surface": "...", "decision": "accept|merge|reject", "merge_target": "...|null", "reason": "..."}}
+  ]
+}}

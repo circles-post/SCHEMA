@@ -1,0 +1,53 @@
+[2026-04-19 19:22:09 INFO] logging to tmp_one_hop_smoke/run.log
+[2026-04-19 19:22:09 INFO] === question_generation start ===
+[2026-04-19 19:22:09 INFO] triples=benchmark_runs/proteinlmbench_full_graphbench/normalized_triples.jsonl  chunks=benchmark_runs/proteinlmbench_full_graphbench/chunks.jsonl  max_samples=30  max_per_key=1
+[2026-04-19 19:22:09 INFO] question_types=['one_hop_tail']  validation_mode=rule_only  validator_enabled=False
+[2026-04-19 19:22:09 INFO] experiment_difficulty=medium  llm_code_selection=auto
+[2026-04-19 19:22:09 INFO] [phase 1/6] loading triples
+[2026-04-19 19:22:09 INFO] [phase 1/6] loaded 4488 triples
+[2026-04-19 19:22:09 INFO] [phase 2/6] loading chunks
+[2026-04-19 19:22:10 INFO] [phase 2/6] loaded 11224 chunks
+[2026-04-19 19:22:10 INFO] [phase 3/6] building index
+[2026-04-19 19:22:10 INFO] [phase 3/6] index ready (triples=4488, entity_types=15)
+[2026-04-19 19:22:10 INFO] validator: enabled=False model=<empty> base_url=<empty> api_key=<empty>
+[2026-04-19 19:22:10 INFO] [phase 4/6] sampling subgraphs
+[2026-04-19 19:22:10 INFO] [phase 4/6] sampled 30 subgraphs total
+[2026-04-19 19:22:10 INFO] [phase 5/6] pre-filtering by uniqueness key (max_per_key=1)
+[2026-04-19 19:22:10 INFO] [phase 5/6] 30 candidates after key-dedup (0 skipped), workers=4
+[2026-04-19 19:22:10 INFO] [phase 5/6] generating + validating: 30 non-experiment (workers=4) + 0 experiment_code (workers=2)
+[2026-04-19 19:22:10 INFO]   [1/30] qg_000001 REJECT type=one_hop_tail vmode=rule_only build=0.0s validate=0.0s  (accepted=0 rejected=1) reasons=['no_evidence_alignment'] options=4
+[2026-04-19 19:22:10 INFO]   [2/30] qg_000002 PASS type=one_hop_tail vmode=rule_only build=0.0s validate=0.0s  (accepted=1 rejected=1)
+[2026-04-19 19:22:10 INFO]   [3/30] qg_000003 REJECT type=one_hop_tail vmode=rule_only build=0.0s validate=0.0s  (accepted=1 rejected=2) reasons=['no_evidence_alignment'] options=4
+[2026-04-19 19:22:10 INFO]   [4/30] qg_000004 PASS type=one_hop_tail vmode=rule_only build=0.0s validate=0.0s  (accepted=2 rejected=2)
+[2026-04-19 19:22:10 INFO]   [5/30] qg_000005 REJECT type=one_hop_tail vmode=rule_only build=0.0s validate=0.0s  (accepted=2 rejected=3) reasons=['no_evidence_alignment'] options=4
+[2026-04-19 19:22:10 INFO]   [6/30] qg_000006 PASS type=one_hop_tail vmode=rule_only build=0.0s validate=0.0s  (accepted=3 rejected=3)
+[2026-04-19 19:22:10 INFO]   [7/30] qg_000007 REJECT type=one_hop_tail vmode=rule_only build=0.0s validate=0.0s  (accepted=3 rejected=4) reasons=['no_evidence_alignment'] options=4
+[2026-04-19 19:22:10 INFO]   [8/30] qg_000008 PASS type=one_hop_tail vmode=rule_only build=0.0s validate=0.0s  (accepted=4 rejected=4)
+[2026-04-19 19:22:10 INFO]   [9/30] qg_000009 REJECT type=one_hop_tail vmode=rule_only build=0.0s validate=0.0s  (accepted=4 rejected=5) reasons=['no_evidence_alignment'] options=4
+[2026-04-19 19:22:10 INFO]   [10/30] qg_000010 PASS type=one_hop_tail vmode=rule_only build=0.0s validate=0.0s  (accepted=5 rejected=5)
+[2026-04-19 19:22:10 INFO]   [11/30] qg_000011 REJECT type=one_hop_tail vmode=rule_only build=0.0s validate=0.0s  (accepted=5 rejected=6) reasons=['no_evidence_alignment'] options=4
+[2026-04-19 19:22:10 INFO]   [12/30] qg_000012 PASS type=one_hop_tail vmode=rule_only build=0.0s validate=0.0s  (accepted=6 rejected=6)
+[2026-04-19 19:22:10 INFO]   [13/30] qg_000013 PASS type=one_hop_tail vmode=rule_only build=0.0s validate=0.0s  (accepted=7 rejected=6)
+[2026-04-19 19:22:10 INFO]   [14/30] qg_000014 REJECT type=one_hop_tail vmode=rule_only build=0.0s validate=0.0s  (accepted=7 rejected=7) reasons=['no_evidence_alignment'] options=4
+[2026-04-19 19:22:10 INFO]   [15/30] qg_000015 PASS type=one_hop_tail vmode=rule_only build=0.0s validate=0.0s  (accepted=8 rejected=7)
+[2026-04-19 19:22:10 INFO]   [16/30] qg_000016 PASS type=one_hop_tail vmode=rule_only build=0.0s validate=0.0s  (accepted=9 rejected=7)
+[2026-04-19 19:22:10 INFO]   [17/30] qg_000017 PASS type=one_hop_tail vmode=rule_only build=0.0s validate=0.0s  (accepted=10 rejected=7)
+[2026-04-19 19:22:10 INFO]   [18/30] qg_000018 PASS type=one_hop_tail vmode=rule_only build=0.0s validate=0.0s  (accepted=11 rejected=7)
+[2026-04-19 19:22:10 INFO]   [19/30] qg_000019 PASS type=one_hop_tail vmode=rule_only build=0.0s validate=0.0s  (accepted=12 rejected=7)
+[2026-04-19 19:22:10 INFO]   [20/30] qg_000020 PASS type=one_hop_tail vmode=rule_only build=0.0s validate=0.0s  (accepted=13 rejected=7)
+[2026-04-19 19:22:10 INFO]   [21/30] qg_000021 PASS type=one_hop_tail vmode=rule_only build=0.0s validate=0.0s  (accepted=14 rejected=7)
+[2026-04-19 19:22:10 INFO]   [22/30] qg_000022 PASS type=one_hop_tail vmode=rule_only build=0.0s validate=0.0s  (accepted=15 rejected=7)
+[2026-04-19 19:22:10 INFO]   [23/30] qg_000023 REJECT type=one_hop_tail vmode=rule_only build=0.0s validate=0.0s  (accepted=15 rejected=8) reasons=['no_evidence_alignment'] options=4
+[2026-04-19 19:22:10 INFO]   [24/30] qg_000024 REJECT type=one_hop_tail vmode=rule_only build=0.0s validate=0.0s  (accepted=15 rejected=9) reasons=['no_evidence_alignment'] options=4
+[2026-04-19 19:22:10 INFO]   [25/30] qg_000025 REJECT type=one_hop_tail vmode=rule_only build=0.0s validate=0.0s  (accepted=15 rejected=10) reasons=['no_evidence_alignment'] options=4
+[2026-04-19 19:22:10 INFO]   [26/30] qg_000026 PASS type=one_hop_tail vmode=rule_only build=0.0s validate=0.0s  (accepted=16 rejected=10)
+[2026-04-19 19:22:10 INFO]   [27/30] qg_000027 REJECT type=one_hop_tail vmode=rule_only build=0.0s validate=0.0s  (accepted=16 rejected=11) reasons=['no_evidence_alignment'] options=4
+[2026-04-19 19:22:10 INFO]   [28/30] qg_000028 PASS type=one_hop_tail vmode=rule_only build=0.0s validate=0.0s  (accepted=17 rejected=11)
+[2026-04-19 19:22:10 INFO]   [29/30] qg_000029 PASS type=one_hop_tail vmode=rule_only build=0.0s validate=0.0s  (accepted=18 rejected=11)
+[2026-04-19 19:22:10 INFO]   [30/30] qg_000030 PASS type=one_hop_tail vmode=rule_only build=0.0s validate=0.0s  (accepted=19 rejected=11)
+[2026-04-19 19:22:10 INFO] [phase 5/6] done: accepted=19 rejected=11 skipped_dup=0  types={'one_hop_tail': 19}
+[2026-04-19 19:22:10 INFO] [phase 6/6] dedup + export
+[2026-04-19 19:22:10 INFO] [phase 6/6] dedup: 19 -> 19
+[2026-04-19 19:22:10 INFO] [phase 6/6] wrote tmp_one_hop_smoke/question_samples.jsonl (19 samples)
+[2026-04-19 19:22:10 INFO] [phase 6/6] wrote tmp_one_hop_smoke/summary.json
+[2026-04-19 19:22:10 INFO] === question_generation done in 0.3s: 19 samples ===

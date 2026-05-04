@@ -1,0 +1,18 @@
+{
+  "triples": 4488,
+  "chunks": 11224,
+  "sampled_subgraphs": 40,
+  "accepted_questions": 20,
+  "validation": {
+    "passed": 20
+  },
+  "question_types": [
+    "claim_choice",
+    "boolean_support",
+    "one_hop_tail",
+    "essay"
+  ],
+  "validation_mode": "rule_only",
+  "experiment_difficulty": "medium",
+  "experiment_blueprint_breakdown": {}
+}

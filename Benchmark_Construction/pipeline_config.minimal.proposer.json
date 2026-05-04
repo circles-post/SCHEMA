@@ -1,0 +1,89 @@
+{
+  "project_name": "datasetsa_minimal_run_with_proposer",
+  "env_file": ".env",
+  "seed_keywords": [
+    "FGFR3 urothelial carcinoma"
+  ],
+  "keyword_expansion": {
+    "iterations": 1,
+    "max_terms": 8,
+    "min_term_length": 3,
+    "heuristic_suffixes": [],
+    "manual_synonyms": {
+      "fgfr3 urothelial carcinoma": ["FGFR3 bladder cancer", "erdafitinib FGFR3"]
+    },
+    "generic_replacements": {},
+    "mesh": {"enabled": false},
+    "openai": {"enabled": false}
+  },
+  "pubmed": {
+    "api_key": "",
+    "email": "minimal_run@example.com"
+  },
+  "crossref": {"enabled": false},
+  "biorxiv": {"enabled": false},
+  "retrieval": {
+    "max_workers": 2,
+    "retmax_per_keyword": 3,
+    "query_template": "(\"{keyword}\"[Title/Abstract]) AND english[Language]",
+    "mindate": "2022/01/01",
+    "maxdate": "2024/12/31",
+    "sleep_seconds": 0.0,
+    "journal_allowlist": [],
+    "related_expand_limit": 0,
+    "related_per_seed": 0
+  },
+  "scoring": {
+    "semantic_weight": 0.7,
+    "impact_weight": 0.3,
+    "score_threshold": 0.0,
+    "journal_impact_factors": {},
+    "sapbert": {"enabled": false}
+  },
+  "embedding": {"enabled": false},
+  "fulltext": {
+    "prefer_pmc": true,
+    "abstract_fallback": true,
+    "only_kept": true,
+    "max_workers": 2,
+    "prefer_crossref_landing_page": false
+  },
+  "paper_cache": {
+    "enabled": true,
+    "cache_dir": "/tmp/datasetsa_minimal_cache",
+    "store_pdf": false,
+    "store_xml": true,
+    "store_text": true,
+    "store_landing_page": false
+  },
+  "sciverse": {"enabled": false},
+  "chunking": {"chunk_words": 180, "overlap_words": 40},
+  "graph": {"fusion_threshold": 0.88, "min_component_size": 2},
+  "pdf_parsing": {"enabled": false},
+  "openai_extraction": {
+    "enabled": true,
+    "model": "intern-s1-pro",
+    "base_url": "https://chat.intern-ai.org.cn/api/v1/",
+    "confidence_threshold": 0.3,
+    "thinking_mode": false,
+    "temperature": 0.0,
+    "max_tokens": 1000
+  },
+  "ontology": {
+    "agent_proposer_enabled": true,
+    "sample_size": 10,
+    "evidence_threshold": 1,
+    "distinct_doc_threshold": 1,
+    "max_proposals_per_kind": 6,
+    "require_grounding": true,
+    "cache_dir": "/tmp/datasetsa_proposer_cache",
+    "canonicalizer": {
+      "min_hits": 1,
+      "min_distinct_sources": 1,
+      "cache_dir": "/tmp/datasetsa_canonicalizer_cache",
+      "sciverse": {"enabled": true, "num_results": 3, "timeout_seconds": 60},
+      "pubmed": {"enabled": true, "retmax": 2},
+      "mesh": {"enabled": true, "limit": 2}
+    }
+  }
+}

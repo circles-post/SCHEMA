@@ -1,0 +1,130 @@
+You are auditing a biomedical knowledge-graph extraction ontology against
+ONE text chunk. Your job is to identify entity types, relation types, and
+entity aliases that the chunk uses but the existing ontology does not yet
+cover.
+
+EXISTING ENTITY TYPES (do not propose any of these or their obvious synonyms):
+{entity_types_block}
+
+EXISTING CORE RELATIONS (do not propose any of these or their obvious synonyms):
+{relations_block}
+
+EXISTING RELATION SURFACE ALIASES (already mapped, do not propose):
+{relation_aliases_block}
+
+EXISTING ENTITY ALIASES (already mapped, do not propose):
+{entity_aliases_block}
+
+WHAT YOU SHOULD PROPOSE
+Look for things in the chunk that fall into these GAPS in the existing ontology:
+
+Likely new entity types:
+- specific experimental ASSAYS or screens (e.g. CRISPR knockout screen,
+  ATAC-seq, Hi-C, RNA-seq, ChIP-seq, Seahorse extracellular flux assay,
+  flow cytometry, Western blot — propose them as Assay or related types)
+- specific INSTRUMENTS or platforms (e.g. Orbitrap mass spectrometer,
+  10x Chromium, Illumina NovaSeq, confocal microscope — propose Instrument)
+- LABELING REAGENTS or quantitative tags (e.g. TMTpro, SILAC, iTRAQ,
+  click-chemistry probes — propose ChemicalReagent or Reagent)
+- specific MEASUREMENTS / readouts that aren't a clinical endpoint
+  (e.g. extracellular acidification rate, oxygen consumption rate,
+  fluorescence anisotropy — propose Measurement)
+- specific COMPUTATIONAL PIPELINES or libraries that go beyond the generic
+  Algorithm type (e.g. MAGeCK MLE, DESeq2, Cell Ranger, Seurat — these
+  ARE already covered by Algorithm; do NOT propose them)
+- experimental MODELS that are neither CellLine nor CellType (e.g. patient
+  derived xenograft, organoid, zebrafish, knock-in mouse — propose Model)
+
+Likely new relations:
+- mechanistic verbs that change meaning vs the existing 13 (e.g. cleaves,
+  ubiquitinates, methylates, phosphorylates if used as a *qualitative*
+  modification rather than expression change)
+- a directional regulation that the existing set cannot express
+  (e.g. degrades, recruits-to-promoter, sequesters)
+
+Likely new aliases:
+- abbreviation introduced in the chunk that maps to a name not in the
+  existing ALIASES list (e.g. "PDX = patient-derived xenograft")
+- a standardized form of a concept that the chunk uses an informal name
+  for (e.g. chunk says "MIA cells" → propose alias "MIA" → "MIA PaCa-2")
+
+WHAT YOU SHOULD NOT PROPOSE
+- A name that is just a SPECIFIC INSTANCE of an existing type (e.g. "BRCA1"
+  is a Gene; "FGFR3" is a Protein — do not propose them)
+- A relation that is just a verbal synonym of an existing one
+  (e.g. "binds" is already mapped to associated_with; do not propose)
+- Anything not directly supported by a verbatim quote from the chunk
+- Anything you are less than 80% confident is a real biomedical concept
+
+OUTPUT FORMAT
+Return strict JSON only, no markdown:
+
+{{
+  "new_entity_types": [
+    {{
+      "id": "PascalCaseId",
+      "rationale": "what this concept is and why no existing type fits",
+      "evidence": "verbatim quote from chunk that mentions it"
+    }}
+  ],
+  "new_relations": [
+    {{
+      "id": "snake_case_id",
+      "rationale": "why this verb cannot be expressed by an existing relation",
+      "evidence": "verbatim quote",
+      "surface_form": "the verb/phrase used in the chunk"
+    }}
+  ],
+  "new_entity_aliases": [
+    {{
+      "surface": "lowercased acronym or alternate name",
+      "canonical": "preferred biomedical name",
+      "type": "one of the EXISTING entity types listed above",
+      "evidence": "verbatim quote that introduces both forms"
+    }}
+  ]
+}}
+
+If the chunk really fits the existing ontology perfectly, return:
+{{"new_entity_types": [], "new_relations": [], "new_entity_aliases": []}}
+
+EXAMPLE — chunk text:
+  "We performed a genome-wide CRISPR-Cas12a knockout screen using a custom
+   lentiviral library. Proteomics was run on a Thermo Orbitrap Eclipse mass
+   spectrometer with TMTpro 16-plex isobaric tagging. We measured ECAR
+   (extracellular acidification rate) on a Seahorse XFe96 bioanalyzer."
+
+EXAMPLE — correct response:
+{{
+  "new_entity_types": [
+    {{
+      "id": "Assay",
+      "rationale": "An experimental assay or screen technique. Existing types do not include experimental methodologies; CRISPR-Cas12a knockout screen is a clear example.",
+      "evidence": "We performed a genome-wide CRISPR-Cas12a knockout screen"
+    }},
+    {{
+      "id": "Instrument",
+      "rationale": "A specific scientific instrument used to generate measurements. Existing types do not include hardware platforms.",
+      "evidence": "Thermo Orbitrap Eclipse mass spectrometer"
+    }},
+    {{
+      "id": "Measurement",
+      "rationale": "A quantitative readout produced by an assay. ECAR is not a ClinicalEndpoint and not a BiologicalProcess; it is a measurement.",
+      "evidence": "We measured ECAR (extracellular acidification rate)"
+    }}
+  ],
+  "new_relations": [],
+  "new_entity_aliases": [
+    {{
+      "surface": "ecar",
+      "canonical": "extracellular acidification rate",
+      "type": "Measurement",
+      "evidence": "ECAR (extracellular acidification rate)"
+    }}
+  ]
+}}
+
+NOW analyze the following chunk and produce ONLY the JSON output.
+
+CHUNK:
+{chunk_block}

@@ -1,0 +1,21 @@
+{
+  "status": "corroborated",
+  "external_sources": [
+    {
+      "tool": "literature_search",
+      "title": "Genome-wide association study of self-reported walking pace suggests beneficial effects of brisk walking on health and survival",
+      "doi": "N/A",
+      "url": "",
+      "snippet": "Walking is a simple form of exercise, widely promoted for its health benefits. Self-reported walking pace has been associated with a range of cardiorespiratory and cancer outcomes, and is a strong predictor of mortality. Here we perform a genome-wide association study of self-reported walking pace in 450,967 European ancestry UK Biobank participants. We identify 70 independent associated loci (P < 5 × 10-8), 11 of which are novel. We estimate the SNP-based heritability as 13.2% (s.e. = 0.21%), r",
+      "venue": "N/A",
+      "year": "N/A",
+      "retrieved_at": "2026-04-20T16:20:58Z"
+    }
+  ],
+  "tools_used": [
+    "literature_search"
+  ],
+  "issue_tags": [],
+  "short_rationale": "literature_search returned 1 external papers",
+  "elapsed_seconds": 0.44
+}

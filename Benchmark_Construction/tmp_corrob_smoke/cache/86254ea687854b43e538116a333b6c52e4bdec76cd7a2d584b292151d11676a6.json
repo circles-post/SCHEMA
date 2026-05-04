@@ -1,0 +1,21 @@
+{
+  "status": "corroborated",
+  "external_sources": [
+    {
+      "tool": "literature_search",
+      "title": "Current Landscape of Immunotherapy Trials Involving the Programmed Cell Death Protein 1/Programmed Death-Ligand 1 Axis in Intrathoracic Tumors",
+      "doi": "N/A",
+      "url": "",
+      "snippet": "",
+      "venue": "N/A",
+      "year": "N/A",
+      "retrieved_at": "2026-04-20T16:20:54Z"
+    }
+  ],
+  "tools_used": [
+    "literature_search"
+  ],
+  "issue_tags": [],
+  "short_rationale": "literature_search returned 1 external papers",
+  "elapsed_seconds": 6.59
+}

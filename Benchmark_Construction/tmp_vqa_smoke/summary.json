@@ -1,0 +1,15 @@
+{
+  "triples": 2882,
+  "chunks": 15610,
+  "sampled_subgraphs": 10,
+  "accepted_questions": 10,
+  "validation": {
+    "passed": 10
+  },
+  "question_types": [
+    "vqa"
+  ],
+  "validation_mode": "rule_only",
+  "experiment_difficulty": "medium",
+  "experiment_blueprint_breakdown": {}
+}

@@ -1,0 +1,98 @@
+{
+  "triples": 4488,
+  "chunks": 11224,
+  "sampled_subgraphs": 200,
+  "accepted_questions": 26,
+  "validation": {
+    "passed": 26
+  },
+  "question_types": [
+    "claim_choice",
+    "boolean_support",
+    "two_hop_tail",
+    "essay"
+  ],
+  "validation_mode": "rule_only",
+  "experiment_difficulty": "medium",
+  "experiment_blueprint_breakdown": {},
+  "benchmark_weight": {
+    "config": {
+      "metric": "pagerank_log_percentile",
+      "alpha": 0.85,
+      "anchor_policy": "two_hop_middle_else_tail",
+      "tier_cutoffs": {
+        "T1": 0.8,
+        "T2": 0.2
+      },
+      "weights": {
+        "T1": 1.5,
+        "T2": 1.0,
+        "T3": 0.5,
+        "T3_not_in_graph": 0.5
+      },
+      "not_found_policy": "tier=T3_not_in_graph, weight=0.5 (pruned ≈ niche)"
+    },
+    "tier_breakdown": {
+      "T1": 12,
+      "T3_not_in_graph": 12,
+      "T2": 2
+    },
+    "match_strategy_breakdown": {
+      "direct": 14,
+      "not_found": 12
+    },
+    "graph_path": "benchmark_runs/proteinlmbench_full_graphbench/global_graph.graphml",
+    "graph_node_count": 1112,
+    "graph_alias_count": 241
+  },
+  "question_type_quotas": {
+    "declared_ratios": {
+      "boolean_support": 0.25,
+      "essay": 0.25,
+      "two_hop_tail": 0.25,
+      "claim_choice": 0.25
+    },
+    "effective_quotas": {
+      "boolean_support": 25,
+      "essay": 25,
+      "two_hop_tail": 25,
+      "claim_choice": 25
+    },
+    "per_type_pool": {
+      "claim_choice": 2000,
+      "boolean_support": 2000,
+      "essay": 2000,
+      "two_hop_tail": 2000
+    },
+    "per_type_selected": {
+      "claim_choice": 107,
+      "boolean_support": 36,
+      "essay": 25,
+      "two_hop_tail": 32
+    },
+    "coverage_priority_target": 100,
+    "coverage_priority_picked": 100
+  },
+  "coverage": {
+    "coverage_mode": "greedy",
+    "graph_path": "benchmark_runs/proteinlmbench_full_graphbench/global_graph.graphml",
+    "total_graph_nodes": 1112,
+    "covered_nodes": 317,
+    "node_coverage_rate": 0.2851,
+    "total_graph_edges": 2203,
+    "covered_edges": 179,
+    "edge_coverage_rate": 0.0813,
+    "per_type_new_nodes": {
+      "claim_choice": 187,
+      "boolean_support": 66,
+      "essay": 15,
+      "two_hop_tail": 49
+    },
+    "per_type_new_edges": {
+      "claim_choice": 106,
+      "boolean_support": 36,
+      "essay": 11,
+      "two_hop_tail": 26
+    }
+  }
+}

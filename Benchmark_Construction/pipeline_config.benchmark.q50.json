@@ -1,0 +1,211 @@
+{
+  "project_name": "proteinlmbench_pubmed_graph_q50",
+  "env_file": ".env",
+  "benchmark_seed_source": {
+    "enabled": true,
+    "benchmark_script_path": "/mnt/shared-storage-user/fengxinshun/AISci/AgentDebug/agdebugger/evaluate_autogen_life_science.py",
+    "benchmark_local_path": "/mnt/shared-storage-user/fengxinshun/AISci/datasets/ProteinLMBench.csv",
+    "dataset_name": "ProteinLMBench",
+    "cache_dir": null,
+    "question_limit": 50,
+    "min_frequency": 1,
+    "max_seed_keywords": 15,
+    "mode": "replace",
+    "llm": {
+      "enabled": true,
+      "model": "intern-s1-pro",
+      "base_url": "https://chat.intern-ai.org.cn/api/v1/",
+      "thinking_mode": false,
+      "temperature": 0.0,
+      "max_tokens": 1200,
+      "max_retries": 5,
+      "retry_sleep_seconds": 5.0,
+      "retry_backoff": 2.0,
+      "question_batch_size": 20,
+      "max_terms_per_batch": 18
+    }
+  },
+  "seed_keywords": [
+    "Breast Cancer",
+    "Bladder Cancer"
+  ],
+  "keyword_expansion": {
+    "iterations": 1,
+    "max_terms": 64,
+    "min_term_length": 3,
+    "heuristic_suffixes": [],
+    "enable_acronyms": false,
+    "manual_synonyms": {},
+    "generic_replacements": {},
+    "mesh": {
+      "enabled": true,
+      "base_url": "https://id.nlm.nih.gov/mesh",
+      "limit": 2,
+      "term_match_modes": [
+        "exact",
+        "contains"
+      ],
+      "match_modes": [
+        "exact",
+        "contains"
+      ],
+      "include_terms": true,
+      "include_seealso": false,
+      "include_qualifiers": false,
+      "timeout": 20
+    },
+    "openai": {
+      "enabled": false,
+      "model": "intern-s1-pro",
+      "base_url": "https://chat.intern-ai.org.cn/api/v1/",
+      "max_terms_per_seed": 8,
+      "thinking_mode": false,
+      "temperature": 0.0,
+      "max_tokens": 400
+    }
+  },
+  "pubmed": {
+    "api_key": "",
+    "email": "test@example.com"
+  },
+  "crossref": {
+    "enabled": true,
+    "base_url": "https://api.crossref.org",
+    "mailto": "test@example.com",
+    "timeout": 30.0,
+    "filter_has_abstract": false,
+    "query_mode": "bibliographic"
+  },
+  "biorxiv": {
+    "enabled": true,
+    "base_url": "https://api.biorxiv.org",
+    "jats_base_url": "https://www.biorxiv.org",
+    "servers": [
+      "biorxiv",
+      "medrxiv"
+    ],
+    "interval_mode": "date_range",
+    "start_date": "2020-01-01",
+    "end_date": "2026-12-31",
+    "recent_count": 500,
+    "recent_days": 30,
+    "max_pages_per_keyword": 5,
+    "page_size": 100,
+    "category": "",
+    "timeout": 30.0
+  },
+  "retrieval": {
+    "max_workers": 2,
+    "retmax_per_keyword": 4,
+    "crossref_query_mode": "bibliographic",
+    "query_template": "(\"{keyword}\"[Title/Abstract] OR \"{keyword}\"[MeSH Terms]) AND english[Language]",
+    "mindate": "2020/01/01",
+    "maxdate": "2026/12/31",
+    "sleep_seconds": 0.25,
+    "journal_allowlist": [],
+    "related_expand_limit": 3,
+    "related_per_seed": 2
+  },
+  "scoring": {
+    "semantic_weight": 0.7,
+    "impact_weight": 0.3,
+    "score_threshold": 0.03,
+    "journal_impact_factors": {
+      "Nature Medicine": 82.9,
+      "The Lancet Oncology": 54.4,
+      "Journal of Clinical Oncology": 45.3
+    },
+    "sapbert": {
+      "enabled": true,
+      "model_path": "/mnt/shared-storage-user/ai4good2-share/fengxinshun/embedding_models/SapBERT-from-PubMedBERT-fulltext",
+      "batch_size": 4,
+      "device": "cpu",
+      "service_url": "http://100.99.247.97:8765",
+      "remote_model": "sapbert",
+      "request_timeout": 120.0,
+      "verify_ssl": true
+    }
+  },
+  "embedding": {
+    "enabled": true,
+    "model_path": "/mnt/shared-storage-user/ai4good2-share/fengxinshun/embedding_models/bge-large-en",
+    "batch_size": 4,
+    "device": "cpu",
+    "instruction_prefix": "",
+    "service_url": "http://100.99.247.97:8765",
+    "remote_model": "bge",
+    "request_timeout": 120.0,
+    "verify_ssl": true
+  },
+  "fulltext": {
+    "prefer_pmc": true,
+    "abstract_fallback": true,
+    "only_kept": true,
+    "max_workers": 2,
+    "prefer_crossref_landing_page": true,
+    "crossref_landing_page_timeout": 20.0,
+    "crossref_landing_page_min_chars": 1200
+  },
+  "paper_cache": {
+    "enabled": true,
+    "cache_dir": "/mnt/shared-storage-user/ai4good2-share/fengxinshun/datasetsa/paper_cache",
+    "store_pdf": true,
+    "store_xml": true,
+    "store_text": true,
+    "store_landing_page": true
+  },
+  "sciverse": {
+    "enabled": false,
+    "toolkit_root": "/mnt/shared-storage-user/fengxinshun/AISci/sciverse",
+    "search_top_k": 5,
+    "language": "en",
+    "require_match": true,
+    "min_title_token_overlap": 0.7
+  },
+  "chunking": {
+    "chunk_words": 180,
+    "overlap_words": 40
+  },
+  "graph": {
+    "fusion_threshold": 0.88,
+    "min_component_size": 2
+  },
+  "entity_verification": {
+    "enabled": true,
+    "pubmed_retmax": 2,
+    "mesh_enabled": true,
+    "mesh_limit": 2,
+    "timeout": 20,
+    "llm": {
+      "model": "intern-s1-pro",
+      "base_url": "https://chat.intern-ai.org.cn/api/v1/",
+      "thinking_mode": false,
+      "temperature": 0.0,
+      "max_tokens": 600,
+      "max_retries": 5,
+      "retry_sleep_seconds": 5.0,
+      "retry_backoff": 2.0
+    }
+  },
+  "pdf_parsing": {
+    "enabled": false,
+    "backends": [
+      "pdfplumber",
+      "pymupdf",
+      "pypdf"
+    ]
+  },
+  "openai_extraction": {
+    "enabled": true,
+    "model": "intern-s1-pro",
+    "base_url": "https://chat.intern-ai.org.cn/api/v1/",
+    "confidence_threshold": 0.5,
+    "chunk_selection_strategy": "round_robin_by_doc",
+    "thinking_mode": false,
+    "temperature": 0.0,
+    "max_tokens": 900,
+    "max_retries": 5,
+    "retry_sleep_seconds": 5.0,
+    "retry_backoff": 2.0
+  }
+}

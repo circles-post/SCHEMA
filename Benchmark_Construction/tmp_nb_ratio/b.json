@@ -1,0 +1,129 @@
+{
+  "triples": 4488,
+  "chunks": 11224,
+  "sampled_subgraphs": 491,
+  "accepted_questions": 132,
+  "validation": {
+    "passed": 132
+  },
+  "question_types": [
+    "claim_choice",
+    "boolean_support",
+    "two_hop_tail",
+    "essay"
+  ],
+  "validation_mode": "rule_only",
+  "experiment_difficulty": "medium",
+  "experiment_blueprint_breakdown": {},
+  "benchmark_weight": {
+    "config": {
+      "metric": "pagerank_log_percentile",
+      "alpha": 0.85,
+      "anchor_policy": "two_hop_middle_else_tail",
+      "tier_cutoffs": {
+        "T1": 0.8,
+        "T2": 0.2
+      },
+      "weights": {
+        "T1": 1.5,
+        "T2": 1.0,
+        "T3": 0.5,
+        "T3_not_in_graph": 0.5
+      },
+      "not_found_policy": "tier=T3_not_in_graph, weight=0.5 (pruned ≈ niche)"
+    },
+    "tier_breakdown": {
+      "T1": 17,
+      "T3_not_in_graph": 109,
+      "T2": 6
+    },
+    "match_strategy_breakdown": {
+      "direct": 23,
+      "not_found": 109
+    },
+    "graph_path": "benchmark_runs/proteinlmbench_full_graphbench/global_graph.graphml",
+    "graph_node_count": 1112,
+    "graph_alias_count": 241
+  },
+  "allocation": {
+    "mode": "node_based",
+    "tier_quota": {
+      "T1": 3,
+      "T2": 2,
+      "T3": 1
+    },
+    "tier_sizes": {
+      "T1": 221,
+      "T2": 436,
+      "T3": 455
+    },
+    "per_tier_selected": {
+      "T1": 491,
+      "T2": 0,
+      "T3": 0
+    },
+    "per_type_selected": {
+      "claim_choice": 173,
+      "boolean_support": 47,
+      "essay": 98,
+      "two_hop_tail": 173
+    },
+    "per_type_pool": {
+      "claim_choice": 4419,
+      "boolean_support": 2607,
+      "essay": 4419,
+      "two_hop_tail": 5000
+    },
+    "per_type_target": {
+      "claim_choice": 150,
+      "boolean_support": 25,
+      "essay": 75,
+      "two_hop_tail": 250
+    },
+    "per_type_ratio": {
+      "two_hop_tail": 0.5,
+      "claim_choice": 0.3,
+      "essay": 0.15,
+      "boolean_support": 0.05
+    },
+    "per_type_deviation": {
+      "claim_choice": 23,
+      "boolean_support": 22,
+      "essay": 23,
+      "two_hop_tail": -77
+    },
+    "truncated_tier_slots": {
+      "T1": 163,
+      "T2": 872,
+      "T3": 455
+    },
+    "initial_target_samples": 1990,
+    "final_sampled": 491,
+    "insufficient_nodes": {
+      "T1": 9,
+      "T2": 0,
+      "T3": 0
+    },
+    "per_node_count_histogram": {
+      "0": 891,
+      "2": 170,
+      "3": 50,
+      "1": 1
+    }
+  },
+  "coverage": {
+    "graph_path": "benchmark_runs/proteinlmbench_full_graphbench/global_graph.graphml",
+    "coverage_mode": "node_based",
+    "total_graph_nodes": 1112,
+    "covered_nodes": 336,
+    "node_coverage_rate": 0.3022,
+    "total_graph_edges": 2203,
+    "covered_edges": 123,
+    "edge_coverage_rate": 0.0558,
+    "per_tier_new_nodes": {
+      "T1": 221,
+      "T2": 0,
+      "T3": 0
+    }
+  }
+}

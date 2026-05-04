@@ -1,0 +1,732 @@
+# Knowledge graph ontology for the pubmed_graph pipeline.
+#
+# This file is the SINGLE SOURCE OF TRUTH for entity types, relation types,
+# alias maps, and the heuristic regexes used by normalize.py /
+# entity_verification.py / triple_extraction prompt rendering.
+#
+# Snapshot policy: this file was bootstrapped from the hardcoded constants
+# that previously lived in pubmed_graph/normalize.py and
+# pubmed_graph/entity_verification.py as of 2026-04-10. Stage 1 of the
+# refactor requires that loading this file and using the Ontology class
+# produces bit-for-bit equivalent normalize_triple_rows output.
+#
+# Extension policy: stage 2 introduces OntologyProposerAgent which can
+# add entries here at runtime under `extensions:` (written to
+# ontology.run.yaml, NOT to this base file). Anything in `core_*:` is
+# considered stable and downstream consumers (question_generation) may
+# rely on its presence.
+
+version: "1.0.0"
+generated_at: "2026-04-10"
+
+# ---------------------------------------------------------------------------
+# ENTITY TYPES
+# Order must match the original prompts/triple_extraction.txt entity-type
+# bullet list so that the rendered Jinja template stays byte-equivalent.
+# ---------------------------------------------------------------------------
+entity_types:
+  - id: Gene
+    description: "A heritable unit of DNA encoding a functional product, typically referred to by an HGNC symbol."
+    examples: ["BRCA1", "FGFR3", "TP53", "KRAS"]
+    surface_aliases: ["gene", "genes"]
+
+  - id: Protein
+    description: "A polypeptide gene product or a member of a protein family."
+    examples: ["Cullin-3", "p53", "FGFR3", "IGF2BP1"]
+    surface_aliases: ["protein", "proteins"]
+
+  - id: Pathway
+    description: "A named signaling or metabolic pathway."
+    examples: ["MAPK signaling pathway", "Wnt pathway", "Hippo pathway"]
+    surface_aliases: ["pathway"]
+
+  - id: Disease
+    description: "A named disease, disorder, syndrome, or neoplasm."
+    examples: ["bladder cancer", "triple-negative breast cancer", "osteoarthritis"]
+    surface_aliases: ["disease"]
+
+  - id: ClinicalEndpoint
+    description: "A measurable clinical outcome such as overall survival, treatment response, recurrence."
+    examples: ["overall survival", "progression-free survival", "treatment response"]
+    surface_aliases: ["clinical_endpoint", "clinical endpoint", "endpoint"]
+
+  - id: BiologicalProcess
+    description: "A cellular or organismal process such as apoptosis, proliferation, migration."
+    examples: ["apoptosis", "cell migration", "angiogenesis"]
+    surface_aliases: ["biological_process", "biological process", "process"]
+
+  - id: Drug
+    description: "A small molecule, biologic, or compound with a name or code."
+    examples: ["erdafitinib", "cisplatin", "KRX-0401"]
+    surface_aliases: ["drug", "compound", "chemical"]
+
+  - id: Biomarker
+    description: "A measurable indicator used for diagnosis, prognosis, or response prediction."
+    examples: ["PD-L1", "Ki-67"]
+    surface_aliases: ["biomarker"]
+
+  - id: CellLine
+    description: "An established immortalized cell line."
+    examples: ["T24", "HeLa", "MCF-7"]
+    surface_aliases: ["cell_line", "cell line"]
+
+  - id: CellType
+    description: "A cell type or developmental cell state, distinct from an immortalized cell line."
+    examples: ["definitive endoderm cells", "PBMCs", "embryonic stem cells"]
+    surface_aliases: ["cell_type", "cell type"]
+
+  - id: Complex
+    description: "A multi-protein assembly or complex."
+    examples: ["NSE subunits", "Smc5/6 complex", "BAF complex"]
+    surface_aliases: ["complex"]
+
+  - id: TissueRegion
+    description: "An anatomical tissue or region under study."
+    examples: ["bladder mucosa", "tumor stroma"]
+    surface_aliases: ["tissue_region", "tissue region"]
+
+  - id: StainingMethod
+    description: "A histology / pathology staining or readout method."
+    examples: ["immunohistochemistry", "IHC", "H&E staining"]
+    surface_aliases: ["staining_method", "staining method"]
+
+  - id: Algorithm
+    description: "A computational classifier or analysis algorithm."
+    examples: ["random forest", "SVM"]
+    surface_aliases: ["algorithm"]
+
+  - id: RNA
+    description: "A specific RNA species (mRNA, lncRNA, miRNA, etc.)."
+    examples: ["KRAS mRNA", "HOTAIR", "miR-21"]
+    surface_aliases: ["rna"]
+
+  - id: MolecularEntity
+    description: "A specific small molecule, modification, or chemical entity that is not a drug."
+    examples: ["N6-methyladenosine", "m6A", "N1-methyladenosine"]
+    surface_aliases: ["molecular_entity", "molecular entity"]
+
+# ---------------------------------------------------------------------------
+# CORE RELATIONS — stable contract for downstream consumers
+# These 13 relations are exactly the ALLOWED_RELATIONS set from normalize.py.
+# question_generation/evidence_profiler.py grades each one. Do not delete
+# entries from this list without coordinating with question_generation.
+# ---------------------------------------------------------------------------
+core_relations:
+  - id: associated_with
+    directionality: undirected
+    head_types: ["*"]
+    tail_types: ["*"]
+    description: "Generic statistical or contextual association."
+    surface_aliases:
+      - "associated_with"
+      - "associated with"
+      - "correlated_with"
+      - "correlates_with"
+      - "association"
+      - "regulator"
+      - "expression"
+
+  - id: overexpressed_in
+    directionality: directed
+    head_types: ["Gene", "Protein", "RNA", "Biomarker", "MolecularEntity"]
+    tail_types: ["Disease", "TissueRegion", "CellType", "CellLine"]
+    surface_aliases:
+      - "overexpressed_in"
+      - "overexpressed in"
+
+  - id: downregulated_in
+    directionality: directed
+    head_types: ["Gene", "Protein", "RNA", "Biomarker", "MolecularEntity"]
+    tail_types: ["Disease", "TissueRegion", "CellType", "CellLine"]
+    surface_aliases:
+      - "downregulated_in"
+      - "downregulated in"
+      - "underexpressed_in"
+      - "underexpressed in"
+
+  - id: upregulated_in
+    directionality: directed
+    head_types: ["Gene", "Protein", "RNA", "Biomarker", "MolecularEntity"]
+    tail_types: ["Disease", "TissueRegion", "CellType", "CellLine"]
+    surface_aliases: []
+
+  - id: part_of
+    directionality: directed
+    head_types: ["*"]
+    tail_types: ["Complex", "Pathway", "BiologicalProcess"]
+    surface_aliases:
+      - "part_of"
+      - "part-of"
+      - "member_of"
+      - "member of"
+      - "component_of"
+      - "component of"
+
+  - id: involved_in
+    directionality: directed
+    head_types: ["*"]
+    tail_types: ["BiologicalProcess", "Pathway"]
+    surface_aliases:
+      - "involved_in"
+      - "involved in"
+      - "participates_in"
+      - "participates in"
+      - "pathway"
+      - "influenced"
+
+  - id: involved_in_pathway
+    directionality: directed
+    head_types: ["*"]
+    tail_types: ["Pathway"]
+    description: "Specialization of involved_in when the tail is explicitly a Pathway."
+    surface_aliases: []
+
+  - id: improves
+    directionality: directed
+    head_types: ["Drug", "Protein", "Biomarker"]
+    tail_types: ["ClinicalEndpoint"]
+    surface_aliases:
+      - "improves"
+      - "enhances"
+
+  - id: promotes
+    directionality: directed
+    head_types: ["*"]
+    tail_types: ["BiologicalProcess", "Pathway", "Disease", "ClinicalEndpoint"]
+    surface_aliases:
+      - "promotes"
+      - "positively_affects"
+      - "favors"
+
+  - id: activates
+    directionality: directed
+    head_types: ["*"]
+    tail_types: ["Protein", "Pathway", "BiologicalProcess", "Gene"]
+    surface_aliases:
+      - "activates"
+
+  - id: inhibits
+    directionality: directed
+    head_types: ["*"]
+    tail_types: ["Protein", "Pathway", "BiologicalProcess", "Gene"]
+    surface_aliases:
+      - "inhibits"
+
+  - id: downregulates
+    directionality: directed
+    head_types: ["*"]
+    tail_types: ["Gene", "Protein", "RNA", "Pathway"]
+    surface_aliases:
+      - "downregulates"
+      - "suppresses"
+      - "silences"
+
+  - id: upregulates
+    directionality: directed
+    head_types: ["*"]
+    tail_types: ["Gene", "Protein", "RNA", "Pathway"]
+    surface_aliases:
+      - "upregulates"
+
+# ---------------------------------------------------------------------------
+# Relation aliases that resolve to a relation NOT in core_relations.
+# These come from RELATION_MAP entries whose value is itself just an alias.
+# ---------------------------------------------------------------------------
+relation_resolution:
+  # surface key → resolved canonical relation id
+  recruits: associated_with               # see canonical_relation override
+  binds_to: associated_with
+  bound_to: associated_with
+  interacted_with: associated_with
+  interacts_with: associated_with
+  activated_by: activates                 # head/tail flip handled in normalize_triple_row
+  inhibited_by: inhibits
+  upregulated_by: upregulates
+  downregulated_by: downregulates
+  gene_expression: regulates_expression_of   # synthetic; further resolved by surface verb
+  expression: associated_with
+
+# Verb hint sets that drive last-resort relation inference (ASSOCIATION_HINTS / IMPROVEMENT_HINTS).
+relation_hints:
+  association_hints:
+    [associate, associated, association, correlate, correlated, link, linked]
+  improvement_hints:
+    [improve, improved, improves, enhance, enhanced, enhances, benefit, beneficial, better]
+
+# Surface keys whose appearance in surface_relation triggers head/tail swap
+# in normalize_triple_row.
+swap_surface_relations:
+  activated_by: activates
+  inhibited_by: inhibits
+  upregulated_by: upregulates
+  downregulated_by: downregulates
+
+# ---------------------------------------------------------------------------
+# ENTITY ALIAS TABLE (STATIC_ALIAS_MAP snapshot)
+# Each entry: surface_form (lowercased) → canonical_name (and optional type).
+# Entries with type:null skip type override.
+# ---------------------------------------------------------------------------
+aliases:
+  - surface: tnbc
+    canonical: "triple-negative breast cancer"
+    type: Disease
+  - surface: "triple negative breast cancer"
+    canonical: "triple-negative breast cancer"
+    type: Disease
+  - surface: mibc
+    canonical: "muscle-invasive bladder cancer"
+    type: Disease
+  - surface: nmibc
+    canonical: "non-muscle-invasive bladder cancer"
+    type: Disease
+  - surface: "her2 positive breast cancer"
+    canonical: "HER2-positive breast cancer"
+    type: Disease
+  - surface: "her2+ breast cancer"
+    canonical: "HER2-positive breast cancer"
+    type: Disease
+  - surface: dd
+    canonical: "developmental delay"
+    type: Disease
+  - surface: id
+    canonical: "intellectual disability"
+    type: Disease
+  - surface: oa
+    canonical: "osteoarthritis"
+    type: Disease
+  - surface: "ph domain"
+    canonical: "pleckstrin homology domain"
+    type: null
+  - surface: "ph domains"
+    canonical: "pleckstrin homology domains"
+    type: null
+  - surface: m6a
+    canonical: "N6-methyladenosine"
+    type: MolecularEntity
+  - surface: "n6 methyladenosine"
+    canonical: "N6-methyladenosine"
+    type: MolecularEntity
+  - surface: "n6-methyladenosine"
+    canonical: "N6-methyladenosine"
+    type: MolecularEntity
+  - surface: cul3
+    canonical: "Cullin-3"
+    type: Protein
+
+# ---------------------------------------------------------------------------
+# CONTEXTUAL OVERRIDES — case rules where evidence text decides the canonical
+# form. These come from canonical_entity_name() and entity_verification.
+#
+# Stage 3.1: NSE / SMC / definitive endoderm overrides removed. Per-paper
+# terminology is now resolved at runtime by OntologyProposerAgent + the
+# sciverse/pubmed/mesh-backed EntityCanonicalizer. The legacy entries are
+# preserved in `legacy_overrides_disabled` below for historical reference.
+# ---------------------------------------------------------------------------
+contextual_overrides: []
+
+legacy_overrides_disabled:
+  - key: nse
+    when: ["nse subunits", "smc5/6"]
+    canonical: "NSE subunits"
+    type: Complex
+  - key: smcs
+    when: ["smc5/6"]
+    canonical: "SMC proteins"
+    type: Protein
+  - key: smc
+    when: ["smc5/6"]
+    canonical: "SMC proteins"
+    type: Protein
+  - key: "smooth muscle cells"
+    when: ["smc5/6"]
+    canonical: "SMC proteins"
+    type: Protein
+  - key: "de cells"
+    when: []
+    canonical: "definitive endoderm cells"
+    type: CellType
+  - key: "definitive endoderm"
+    when: []
+    canonical: "definitive endoderm cells"
+    type: CellType
+  - key: "definitive endoderm cells"
+    when: []
+    canonical: "definitive endoderm cells"
+    type: CellType
+
+# ---------------------------------------------------------------------------
+# REGEX-DRIVEN TYPING — these mirror the regexes hardcoded in normalize.py.
+# Order in this list = priority. canonical_entity_type() applies them in order.
+# ---------------------------------------------------------------------------
+type_regex_rules:
+  - id: molecular_entity_re
+    pattern: "^(?:m6a|n6[- ]methyladenosine|n1[- ]methyladenosine|m1a|n6,2'-o-dimethyladenosine)$"
+    flags: ["IGNORECASE"]
+    type: MolecularEntity
+
+  - id: protein_family_re
+    pattern: "^(?:IGF2BP|HNRNP|hnRNP|BRD|LATS|MST|TMPRSS|FZD|SMC|NSE|CUL)\\w*(?:[-/–]\\w+)*$"
+    flags: []
+    type: Protein
+
+  - id: protein_name_hint_re
+    pattern: "\\b(?:cullin(?:[- ]\\d+)?|cul\\d+|kinase|phosphatase|ligase|receptor|histone|actin|tubulin|integrin|cyclin|protease|transporter|subunit)\\b"
+    flags: ["IGNORECASE"]
+    type: Protein
+
+  - id: phospho_protein_re
+    pattern: "^(?:p|P)-[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$"
+    flags: []
+    type: Protein
+
+  - id: drug_code_re
+    pattern: "^[A-Z]{2,6}-\\d{2,6}[A-Z]?$"
+    flags: []
+    type: Drug
+
+  - id: survival_re
+    pattern: "\\b(overall survival|progression-free survival|disease-free survival|relapse-free survival|survival rate)\\b"
+    flags: ["IGNORECASE"]
+    type: ClinicalEndpoint
+
+# Substring-driven typing applied AFTER regex rules in canonical_entity_type.
+type_substring_rules:
+  - type: ClinicalEndpoint
+    any_of: ["prognosis", "progression", "recurrence", "mortality", "treatment response", "response rate", "resistance"]
+  - type: Pathway
+    any_of: ["pathway", "pathways", "signaling", "signalling", "cascade"]
+  - type: Complex
+    any_of: ["complex"]
+  # cell-type heuristic is handled by cell_type_hints below; staining + algorithm here
+  - type: StainingMethod
+    any_of: ["immunohistochemistry", "staining"]
+    exact_lower: ["ihc"]
+  - type: Algorithm
+    any_of: ["algorithm", "classifier", "random forest"]
+    exact_lower: ["svm"]
+  - type: CellLine
+    any_of: ["cell line"]
+  - type: BiologicalProcess
+    any_of: ["apoptosis", "carcinogenesis", "cell survival", "cell death", "proliferation", "angiogenesis", "migration", "invasion"]
+  - type: Disease
+    any_of: ["cancer", "carcinoma", "neoplasm", "tumor", "tumour", "disease", "syndrome"]
+
+# Phospho-protein prefix override (lower.startswith check, applied alongside PHOSPHO_PROTEIN_RE).
+phospho_protein_prefixes:
+  - "phospho-"
+
+# Final replacement passes applied in canonical_entity_name when type matches.
+canonical_name_replacements:
+  - when_type: ClinicalEndpoint
+    replacements:
+      - from: "positive survival rate"
+        to: "overall survival"
+
+# Suffix-driven typing applied between regex and substring stages.
+type_suffix_rules:
+  - type: BiologicalProcess
+    suffix: " modification"
+  - type: BiologicalProcess
+    suffix: " interaction"
+    require_dash_in_text: true
+
+# Cell type heuristics (looks_like_cell_type / looks_like_cell_line in normalize.py)
+cell_type_hints:
+  exact_lower:
+    - pbmcs
+    - escs
+    - "embryonic stem cells"
+    - "definitive endoderm"
+    - "definitive endoderm cells"
+    - mesendoderm
+    - "mesendoderm cells"
+  suffix_lower:
+    - " cells"
+    - " cell"
+  exclude_substring_lower:
+    - "cell line"
+
+# Stage 3.1: removed the hardcoded "Complex" exact-match set. NSE / SMC
+# names that legitimately denote a multi-protein complex must now be
+# either grounded by EntityCanonicalizer (mesh/pubmed/sciverse) or proposed
+# as an alias by OntologyProposerAgent.
+complex_exact_lower: []
+
+# Generic entity blocklist used by _is_generic_entity / _should_drop.
+generic_entity_blocklist:
+  - study
+  - studies
+  - author
+  - authors
+  - paper
+  - researcher
+  - researchers
+  - method
+  - methods
+  - result
+  - results
+  - analysis
+  - patient
+  - patients
+  - group
+  - groups
+  - cohort
+  - cohorts
+
+# Sentence-fragment heuristic in _looks_like_sentence_entity.
+# Stage 5 (2026-04-11): tightened from max_words=10 to 8 and added a
+# conjunction detector because the full run produced a 2927-degree hub
+# "Programmed Cell Death 1 and Programmed Cell Death Ligand 1" (9 words)
+# that squeezed past the old max_words=10 rule.
+sentence_entity_prefixes:
+  - "interaction between "
+  - "binding of "
+  - "association between "
+sentence_entity_max_words: 8
+sentence_conjunction_words: [" and ", " or ", " versus ", " vs. "]
+sentence_conjunction_max_words: 5
+
+# Short upper-case acronym filter used by _should_drop for Disease/ClinicalEndpoint.
+short_upper_acronym_pattern: "^[A-Z]{2,4}$"
+
+# Forbidden direction edges enforced in _should_drop.
+forbidden_direction_drops:
+  - relation_in: [downregulates, upregulates, regulates_expression_of]
+    head_type: Disease
+    tail_type_in: [Gene, Protein]
+
+# ---------------------------------------------------------------------------
+# TYPE SYNONYMS — LLM-invented entity_type strings → core type id
+#
+# Stage 5 (2026-04-11): the full ProteinLMBench run produced ~130 distinct
+# entity types because the extraction LLM invents its own labels
+# ("SmallMolecule", "lncRNA", "ProteinComplex", ...). canonical_entity_type
+# now consults this map before falling through the regex/substring rules,
+# and anything still unmapped (and not in the core 16) triggers a drop in
+# _should_drop (via `strict_entity_types: true`).
+#
+# Keys are normalized via _snake_case (lowercase, punctuation → _ or " ").
+# ---------------------------------------------------------------------------
+type_synonyms:
+  # small molecules / drugs
+  smallmolecule: Drug
+  small_molecule: Drug
+  small molecule: Drug
+  smallmoleculeinhibitor: Drug
+  pharmacologic_substance: Drug
+  pharmacologic substance: Drug
+  compound: Drug
+  chemical: Drug
+  chemical_compound: Drug
+  therapeutic: Drug
+  therapeutic_agent: Drug
+  antibody: Drug
+  aptamer: Drug
+  oligonucleotide: Drug
+  peptide: Drug
+  hormone: Drug
+  cyclic_nucleotide: MolecularEntity
+  metabolite: MolecularEntity
+
+  # proteins / protein sub-classes
+  proteindomain: Protein
+  protein_domain: Protein
+  proteinfamily: Protein
+  protein_family: Protein
+  proteinisoform: Protein
+  protein_isoform: Protein
+  proteinregion: Protein
+  protein_region: Protein
+  proteinresidue: Protein
+  protein_residue: Protein
+  proteinmutation: Protein
+  protein_mutation: Protein
+  phosphopeptide: Protein
+  phospho_peptide: Protein
+  immunoglobulin: Protein
+  immune_checkpoint: Protein
+
+  # complexes
+  proteincomplex: Complex
+  protein_complex: Complex
+  molecular_complex: Complex
+  macromolecular_complex: Complex
+  protein_protein_interaction: Complex
+  protein-protein interaction: Complex
+  proteinproteininteraction: Complex
+  proteininteraction: Complex
+  protein_interaction: Complex
+
+  # RNAs
+  lncrna: RNA
+  mirna: RNA
+  microrna: RNA
+  noncodingrna: RNA
+  non_coding_rna: RNA
+  functionalrna: RNA
+  functional_rna: RNA
+  mrna: RNA
+  mrna_expression: RNA
+  sirna: RNA
+
+  # nucleic acids / genomic entities
+  dna: MolecularEntity
+  nucleicacid: MolecularEntity
+  nucleic_acid: MolecularEntity
+  nucleotide: MolecularEntity
+  nucleicacidsequence: GenomicRegion
+  nucleic_acid_sequence: GenomicRegion
+  genomicregion: GenomicRegion
+  genomic_region: GenomicRegion
+  genomicentity: Gene
+  genomic_entity: Gene
+  genefamily: Gene
+  gene_family: Gene
+  geneticvariant: Gene
+  genetic_variant: Gene
+  variant: Gene
+  mutation: Gene
+  sequencevariant: Gene
+  sequence_variant: Gene
+  amino_acid_substitution: Protein
+  aminoacidsubstitution: Protein
+  motif: Protein
+  amino_acid_motif: Protein
+  aminoacidmotif: Protein
+  nucleotidemotif: GenomicRegion
+  nucleotide_motif: GenomicRegion
+  dnaregion: GenomicRegion
+  dna_region: GenomicRegion
+
+  # molecular entities / modifications
+  aminoacid: MolecularEntity
+  amino_acid: MolecularEntity
+  lipid: MolecularEntity
+  glycan: MolecularEntity
+  microparticle: MolecularEntity
+  proteinmodification: BiologicalProcess
+  protein_modification: BiologicalProcess
+  posttranslationalmodification: BiologicalProcess
+  post_translational_modification: BiologicalProcess
+  post-translational modification: BiologicalProcess
+  molecularmodification: BiologicalProcess
+  molecular_modification: BiologicalProcess
+
+  # functions / processes
+  molecularfunction: BiologicalProcess
+  molecular_function: BiologicalProcess
+  cellfunction: BiologicalProcess
+  cell_function: BiologicalProcess
+  cellularprocess: BiologicalProcess
+  cellular_process: BiologicalProcess
+  cellularphysiologicalprocess: BiologicalProcess
+  cellular_physiological_process: BiologicalProcess
+  physiologicalprocess: BiologicalProcess
+  physiological_process: BiologicalProcess
+  biochemicalactivity: BiologicalProcess
+  biochemical_activity: BiologicalProcess
+  proteinactivity: BiologicalProcess
+  protein_activity: BiologicalProcess
+  proteinbinding: BiologicalProcess
+  protein_binding: BiologicalProcess
+  proteindegradation: BiologicalProcess
+  protein_degradation: BiologicalProcess
+  celldeath: BiologicalProcess
+  cell_death: BiologicalProcess
+  cellproliferation: BiologicalProcess
+  cell_proliferation: BiologicalProcess
+  celldifferentiation: BiologicalProcess
+  cell_differentiation: BiologicalProcess
+  rnastability: BiologicalProcess
+  rna_stability: BiologicalProcess
+  geneexpression: BiologicalProcess
+  gene_expression: BiologicalProcess
+  translation: BiologicalProcess
+  molecularinteraction: BiologicalProcess
+  molecular_interaction: BiologicalProcess
+  interaction: BiologicalProcess
+  behavior: BiologicalProcess
+
+  # cellular components
+  cellularcomponent: TissueRegion
+  cellular_component: TissueRegion
+  cellcomponent: TissueRegion
+  cell_component: TissueRegion
+  cellularanatomy: TissueRegion
+  cellular_anatomy: TissueRegion
+  organelle: TissueRegion
+  ribosome: TissueRegion
+  chromatin: TissueRegion
+  allostericsite: TissueRegion
+  allosteric_site: TissueRegion
+  promoter: GenomicRegion
+  cisregulatoryelement: GenomicRegion
+  cis_regulatory_element: GenomicRegion
+
+  # anatomy / tissue
+  anatomy: TissueRegion
+  anatomicalstructure: TissueRegion
+  anatomical_structure: TissueRegion
+  anatomicalentity: TissueRegion
+  anatomical_entity: TissueRegion
+  tissue: TissueRegion
+
+  # diseases / clinical
+  diseaseorsyndrome: Disease
+  disease_or_syndrome: Disease
+  cardiovasculardisease: Disease
+  cardiovascular_disease: Disease
+  infectiousdisease: Disease
+  infectious_disease: Disease
+  infection: Disease
+  pathologicalprocess: Disease
+  pathological_process: Disease
+  pathological process: Disease
+  clinicalfinding: ClinicalEndpoint
+  clinical_finding: ClinicalEndpoint
+  clinicaloutcome: ClinicalEndpoint
+  clinical_outcome: ClinicalEndpoint
+  clinicalintervention: ClinicalEndpoint
+  clinical_intervention: ClinicalEndpoint
+  clinicalprocedure: ClinicalEndpoint
+  clinical_procedure: ClinicalEndpoint
+  clinicaltreatment: ClinicalEndpoint
+  clinical_treatment: ClinicalEndpoint
+  therapeuticprocedure: ClinicalEndpoint
+  therapeutic_procedure: ClinicalEndpoint
+  adverseevent: ClinicalEndpoint
+  adverse_event: ClinicalEndpoint
+  intervention: ClinicalEndpoint
+  exposureorphan: ClinicalEndpoint
+  phenotype: ClinicalEndpoint
+  phenotypicabnormality: ClinicalEndpoint
+  phenotypic_abnormality: ClinicalEndpoint
+  morphology: ClinicalEndpoint
+  cognitive_dysfunction: ClinicalEndpoint
+  cognitive dysfunction: ClinicalEndpoint
+  geneticabnormality: ClinicalEndpoint
+  genetic_abnormality: ClinicalEndpoint
+  geneticvariation: ClinicalEndpoint
+  genetic_variation: ClinicalEndpoint
+  phenomena: BiologicalProcess
+  phenomenon: BiologicalProcess
+  phenomenonorprocess: BiologicalProcess
+  phenomenon_or_process: BiologicalProcess
+
+  # organisms / strains / cell types
+  organism: CellType
+  animal: CellType
+  animalmodel: CellType
+  animal_model: CellType
+  bacterium: CellType
+  bacterialstrain: CellType
+  bacterial_strain: CellType
+  strain: CellType
+  virus: CellType
+  pathogenicityisland: CellType
+  pathogenicity_island: CellType
+
+# If true, _should_drop rejects any triple whose head_type or tail_type is
+# empty OR not in allowed_entity_types. Legacy behavior (leak through raw
+# LLM type) is preserved when set to false. Stage 5 default: true.
+strict_entity_types: true
