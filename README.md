@@ -1,3 +1,0 @@
-Init
-test
-etst
