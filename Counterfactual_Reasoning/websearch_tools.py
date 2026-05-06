@@ -21,13 +21,9 @@ from websearch import WebSearcher
 # ---------------------------------------------------------------------------
 # Config (mirrors test_agent_debug.py defaults)
 # ---------------------------------------------------------------------------
-_BRIGHT_DATA_API_KEY = os.environ.get(
-    "BRIGHT_DATA_API_KEY", "cf0ecaca-a28c-49f8-85df-d27e37cd86a8"
-)
-_BRIGHT_DATA_ZONE = os.environ.get("BRIGHT_DATA_ZONE", "serp_api1")
-_DEFAULT_OPENAI_API_KEY = os.environ.get(
-    "AGENTDEBUG_OPENAI_API_KEY", "sk-ZnvhxhwyXok91ezpbDBcObLWa8GehlZtMaqnYT3ziVwhnBzC"
-)
+_BRIGHT_DATA_API_KEY = os.environ.get("BRIGHT_DATA_API_KEY", "")
+_BRIGHT_DATA_ZONE = os.environ.get("BRIGHT_DATA_ZONE", "")
+_DEFAULT_OPENAI_API_KEY = os.environ.get("AGENTDEBUG_OPENAI_API_KEY", "")
 _INTERN_OPENAI_API_KEY = os.environ.get("AGENTDEBUG_INTERN_API_KEY")
 _OPENAI_MODEL_NAME = os.environ.get(
     "AGENTDEBUG_MODEL_AGENT",
@@ -38,9 +34,7 @@ _OPENAI_API_KEY = os.environ.get("AGENTDEBUG_OPENAI_API_KEY_AGENT") or resolve_v
     _DEFAULT_OPENAI_API_KEY,
     intern_value=_INTERN_OPENAI_API_KEY,
 )
-_DEFAULT_OPENAI_BASE_URL = os.environ.get(
-    "AGENTDEBUG_OPENAI_BASE_URL", "http://34.13.73.248:3888/v1"
-)
+_DEFAULT_OPENAI_BASE_URL = os.environ.get("AGENTDEBUG_OPENAI_BASE_URL", "")
 _OPENAI_BASE_URL = os.environ.get("AGENTDEBUG_OPENAI_BASE_URL_AGENT") or resolve_base_url_for_model(
     _OPENAI_MODEL_NAME,
     _DEFAULT_OPENAI_BASE_URL,

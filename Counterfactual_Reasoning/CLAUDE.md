@@ -39,13 +39,14 @@ Key seams:
 - **`model_routing.py`** — single source of truth for "which base_url / api_key / extra_body for which model name". Both `test_agent_debug.py` and `external_agent_controller.py` route through it. Intern (`intern-s1*`) vs non-intern endpoints, plus reasoning/`thinking_mode` toggle, are decided here.
 - **`external_agent/`** — the claim/judge framework. Has its own `cli.py` and `README.md` and is *also* runnable standalone on plain text. `integration.analyze_session_state` is the entrypoint used in-process by the dataset runner. `strategies.py` holds per-domain prompts (`research_questions`, `medical_guidelines`, `legal_cases`, `coding`).
 - **`external_agent_controller.py`** — turns AGDebugger session state + analysis result into a planner JSON action and pushes it back through `AGDebuggerClient`. Contains both a `rule` planner (deterministic bootstrap/step) and an `llm` planner.
-- **`run_dataset_autodebug.py`** — orchestrator. Loads dataset components from the sibling `datasets/` repo (`/mnt/shared-storage-user/fengxinshun/AISci/datasets`, added to `sys.path` at runtime — this path is hardcoded), iterates questions, drives the backend, invokes analysis, applies repairs, scores answers, writes JSONL run logs.
+- **`run_dataset_autodebug.py`** — orchestrator. Loads dataset components from a sibling `datasets/` repo (path comes from `AGDEBUGGER_DATASETS_DIR`, added to `sys.path` at runtime), iterates questions, drives the backend, invokes analysis, applies repairs, scores answers, writes JSONL run logs.
 - **`websearch/`** + `websearch_tools.py` — evidence providers (Serper, Bright Data, PubMed, Crossref, bioRxiv, PDF extraction via MinerU). Used both by the agent under debug (as MCP/function tools) and by the external agent's `WebSearchEvidenceProvider`.
 
-External dependencies the runner expects to find on disk:
-- `/mnt/shared-storage-user/fengxinshun/AISci/ToolUniverse/` — launched as the shared MCP server.
-- `/mnt/shared-storage-user/fengxinshun/AISci/datasets/` — `browse_bio_graph_cluster_examples` is imported from here.
-- `/mnt/shared-storage-user/fengxinshun/AISci/sciverse/` — `sciverse_tools.literature_search` is imported by `test_agent_debug.py`.
+External dependencies the runner expects to find on disk (each is taken
+from an env var; without these the runner will fail to construct the team):
+- `$TOOLUNIVERSE_DIR` — local checkout of ToolUniverse, launched as the shared MCP server.
+- `$AGDEBUGGER_DATASETS_DIR` — local checkout of the `datasets` package; `browse_bio_graph_cluster_examples` is imported from here.
+- `$SCIVERSE_DIR` — local checkout of sciverse; `sciverse_tools.literature_search` is imported by `test_agent_debug.py`.
 
 If any of those are missing the team will fail to construct. They are not pip-installable.
 
@@ -76,7 +77,7 @@ bash run_with_models.sh --component-id 1 --start 0 --limit 5
 bash run_parallel.sh --workers 5 --total-examples 116 -- --component-id 1
 ```
 
-Both scripts source conda env `agentdebug` from `/mnt/shared-storage-user/fengxinshun/miniconda3/miniconda3` by default (override via `AGDEBUGGER_CONDA_ENV`, `CONDA_BASE`). They write per-run artifacts under `logs/<YYYYMMDD>/run_<stamp>/` (`server.log`, `run.jsonl`, `analysis_detail.jsonl`).
+Both scripts source the conda env named in `AGDEBUGGER_CONDA_ENV` (under `CONDA_BASE`); both default to empty so you must set them in your shell. They write per-run artifacts under `logs/<YYYYMMDD>/run_<stamp>/` (`server.log`, `run.jsonl`, `analysis_detail.jsonl`).
 
 Model routing is configured by editing the five env vars at the top of `run_with_models.sh` (`AGENTDEBUG_MODEL_NAME`, `AGENTDEBUG_MODEL_AGENT`, `AGENTDEBUG_MODEL_MCP`, `MODEL_PLANNER`, `MODEL_CLAIM`) — `model_routing.py` then resolves base_url + api_key based on whether the name is an `intern-s1*` model.
 
@@ -106,7 +107,7 @@ Note: `pyproject.toml` only declares the upstream `agdebugger` package under `sr
 
 ## Things to be careful about
 
-- **Hardcoded absolute paths and credentials.** `run_with_models.sh`, `run_parallel.sh`, `test_agent_debug.py`, `run_dataset_autodebug.py`, and `external_agent_controller.py` contain hardcoded `/mnt/shared-storage-user/fengxinshun/...` paths plus inline default API keys (Bright Data, MinerU, Intern, the non-intern proxy endpoint, and an http proxy URL with credentials). These are intentional defaults so that `bash run_with_models.sh` "just works" on the author's box. Don't accidentally exfiltrate them in commits to public branches, and prefer overriding via env vars rather than editing in place.
+- **All credentials and absolute paths come from env vars.** `run_with_models.sh`, `run_parallel.sh`, `test_agent_debug.py`, `run_dataset_autodebug.py`, and `external_agent_controller.py` read every API key (Bright Data, Intern, the non-intern gateway), every sibling-repo path (`TOOLUNIVERSE_DIR`, `SCIVERSE_DIR`, `AGDEBUGGER_DATASETS_DIR`), and the proxy URL purely from env. Set them in your shell or a `.env` before launching.
 - **Proxy hack in `test_agent_debug.py` and `external_agent_controller.py`.** They mutate `http_proxy` / `no_proxy` at import time because httpx doesn't accept CIDR in `no_proxy` and the LLM endpoint must *not* be bypassed. Don't "clean up" this block without re-testing connectivity to both the LLM endpoint and the MCP server.
 - **`autogen-ext` monkey-patch.** `test_agent_debug.py` patches `autogen_ext.models.openai._openai_client._add_usage` to tolerate `None` token counts from non-OpenAI providers. Re-apply if you upgrade `autogen-ext`.
 - **ToolUniverse coordination.** Multiple workers share one MCP server via a lock dir + pid file under `logs/`. If you see `tooluniverse_shared.lock` left behind, the launchers will auto-clean it after 30s; don't `rm -rf logs/` mid-run.

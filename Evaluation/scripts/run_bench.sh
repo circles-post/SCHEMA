@@ -55,12 +55,12 @@ export EVAL_LITERATURE_FETCH_CONCURRENCY="$LIT_FETCH_WORKERS"
 : "${HALU_JUDGE_CONCURRENCY:=10}"
 : "${SUBSET:=}"
 : "${RUN_NAME:=$(date +%Y%m%d)}"
-: "${PY:=/mnt/shared-storage-user/fengxinshun/miniconda3/miniconda3/envs/agentdebug/bin/python}"
+: "${PY:=python}"
 
 # --------------------------------------------------------------------------- #
 # Paths                                                                       #
 # --------------------------------------------------------------------------- #
-ROOT="/mnt/shared-storage-user/ai4good2-share/fengxinshun/datasetsa"
+ROOT="<repo-root>"
 
 # SUBSET="" → samples.jsonl;  SUBSET="balanced" → samples_balanced.jsonl;
 # any other <X>           → samples_<X>.jsonl (must exist next to samples.jsonl).

@@ -10,15 +10,15 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-PYTHON_BIN="${PYTHON_BIN:-/mnt/shared-storage-user/fengxinshun/miniconda3/miniconda3/envs/agentdebug/bin/python}"
+PYTHON_BIN="${PYTHON_BIN:-python}"
 CONFIG="$ROOT_DIR/pipeline_config.smoke.json"
 ENV_SCRIPT="$ROOT_DIR/triple_extraction_env.sh"
-OUT_DIR="${1:-/tmp/datasetsa_smoke_run}"
+OUT_DIR="${1:-/tmp/pubmed_graph_smoke_run}"
 
 cd "$ROOT_DIR"
 
 echo "============================================================"
-echo "datasetsa pipeline smoke test"
+echo "pubmed_graph pipeline smoke test"
 echo "  python:    $PYTHON_BIN"
 echo "  config:    $CONFIG"
 echo "  output:    $OUT_DIR"

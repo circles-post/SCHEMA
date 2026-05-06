@@ -6,10 +6,11 @@ asks an EntityCanonicalizer.resolve() to look up the candidate in real
 literature *before* the proposal is allowed into ontology.run.yaml.
 
 Backends:
-  - sciverse  — paper search via /mnt/shared-storage-user/fengxinshun/AISci/
-                sciverse/sciverse_tools.literature_search (async). Returns
+  - sciverse  — paper search via the sciverse toolkit's
+                ``sciverse_tools.literature_search`` (async). Returns
                 free-form citation snippets that establish "this concept
-                appears in N independent biomedical papers".
+                appears in N independent biomedical papers". Set the
+                ``SCIVERSE_DIR`` env var to your local sciverse checkout.
   - pubmed    — esearch on the existing PubMedClient. Cheap, no extra deps.
   - mesh      — id.nlm.nih.gov/mesh/lookup/descriptor for canonical names
                 of well-known disease/anatomy/chemistry concepts.
@@ -34,13 +35,15 @@ from .pubmed_client import PubMedClient
 from .utils import normalize_keyword, normalize_text
 
 # ---------------------------------------------------------------------------
-# Sciverse adapter — runs the async tool from /mnt/shared-storage-user/fengxinshun/
-# AISci/sciverse/sciverse_tools.py inside a synchronous helper. We do not
-# import sciverse at module top because the toolkit is heavy and may not
-# be available on every host. Lazy import on first use.
+# Sciverse adapter — runs the async tool from the sciverse toolkit
+# (``sciverse_tools.py``) inside a synchronous helper. We do not import
+# sciverse at module top because the toolkit is heavy and may not be
+# available on every host. Lazy import on first use. The toolkit checkout
+# location is taken from the ``SCIVERSE_DIR`` env var.
 # ---------------------------------------------------------------------------
 
-_DEFAULT_SCIVERSE_TOOLS_PATH = "/mnt/shared-storage-user/fengxinshun/AISci/sciverse"
+import os as _os
+_DEFAULT_SCIVERSE_TOOLS_PATH = _os.environ.get("SCIVERSE_DIR", "")
 
 
 def _ensure_sciverse_on_path(toolkit_root: str | None = None) -> None:
@@ -315,7 +318,7 @@ class EntityCanonicalizer:
         cfg = dict(config or {})
         self.min_hits = max(int(cfg.get("min_hits", 2)), 1)
         self.min_distinct_sources = max(int(cfg.get("min_distinct_sources", 1)), 1)
-        self.cache_dir = Path(cfg.get("cache_dir") or "/tmp/datasetsa_canonicalizer_cache")
+        self.cache_dir = Path(cfg.get("cache_dir") or "/tmp/pubmed_graph_canonicalizer_cache")
         self.cache_dir.mkdir(parents=True, exist_ok=True)
         self.sleep_seconds = float(cfg.get("sleep_seconds", 0.0))
 

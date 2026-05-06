@@ -24,7 +24,7 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-PYTHON_BIN="${PYTHON_BIN:-/mnt/shared-storage-user/fengxinshun/miniconda3/miniconda3/envs/agentdebug/bin/python}"
+PYTHON_BIN="${PYTHON_BIN:-python}"
 BASE_CONFIG="$ROOT_DIR/pipeline_config.benchmark.json"
 ENV_SCRIPT="$ROOT_DIR/triple_extraction_env.sh"
 PIPELINE_ENTRY="$ROOT_DIR/literature_pipeline.py"
@@ -41,7 +41,7 @@ PROPOSER_ENABLED="true"
 SKIP_HEALTHCHECK="false"
 FORCE_OVERWRITE="false"
 SCIVERSE_FULLTEXT="${SCIVERSE_FULLTEXT:-true}"
-SCIVERSE_TOOLKIT_ROOT="${SCIVERSE_TOOLKIT_ROOT:-/mnt/shared-storage-user/fengxinshun/AISci/sciverse}"
+SCIVERSE_TOOLKIT_ROOT="${SCIVERSE_TOOLKIT_ROOT:-<sciverse-dir>}"
 SCIVERSE_FT_SEARCH_TOP_K="${SCIVERSE_FT_SEARCH_TOP_K:-5}"
 SCIVERSE_FT_MIN_TITLE_OVERLAP="${SCIVERSE_FT_MIN_TITLE_OVERLAP:-0.6}"
 SCIVERSE_FT_PREFER_DOI_DIRECT="${SCIVERSE_FT_PREFER_DOI_DIRECT:-true}"
@@ -55,12 +55,12 @@ PROPOSER_SAMPLE_SIZE="${PROPOSER_SAMPLE_SIZE:-120}"
 PROPOSER_EVIDENCE_THRESHOLD="${PROPOSER_EVIDENCE_THRESHOLD:-1}"
 PROPOSER_DISTINCT_DOC_THRESHOLD="${PROPOSER_DISTINCT_DOC_THRESHOLD:-1}"
 PROPOSER_MAX_PER_KIND="${PROPOSER_MAX_PER_KIND:-8}"
-PROPOSER_CACHE_DIR="${PROPOSER_CACHE_DIR:-/tmp/datasetsa_proposer_cache}"
-CANON_CACHE_DIR="${CANON_CACHE_DIR:-/tmp/datasetsa_canonicalizer_cache}"
+PROPOSER_CACHE_DIR="${PROPOSER_CACHE_DIR:-/tmp/pubmed_graph_proposer_cache}"
+CANON_CACHE_DIR="${CANON_CACHE_DIR:-/tmp/pubmed_graph_canonicalizer_cache}"
 CANON_MIN_HITS="${CANON_MIN_HITS:-2}"
 CANON_MIN_SOURCES="${CANON_MIN_SOURCES:-1}"
 
-EMBEDDING_HOST="${EMBEDDING_HOST:-100.99.247.97}"
+EMBEDDING_HOST="${EMBEDDING_HOST:-<embedding-host>}"
 EMBEDDING_PORT="${EMBEDDING_PORT:-8765}"
 
 usage() {
@@ -201,7 +201,7 @@ if [[ "$SKIP_HEALTHCHECK" == "false" ]]; then
   echo -n "  sciverse toolkit import ... "
   if "$PYTHON_BIN" - <<'PY' >/dev/null 2>&1
 import sys
-sys.path.insert(0, "/mnt/shared-storage-user/fengxinshun/AISci/sciverse")
+sys.path.insert(0, "<sciverse-dir>")
 import sciverse_tools  # noqa
 PY
   then

@@ -217,7 +217,7 @@ In our pilot study (5 samples × 3 models × 2 judges) judge-induced HR variance
 
 **Symptom**: every `web_search` call from the agent runner returned an empty body. The Python wrapper raised `Exception: Bright Data failed after 3 retries: status=200 empty_body content_type='' req_id=None`.
 
-**Root cause**: zone `serp_api1` enforces source-IP whitelisting. The cluster's egress IPs (`207.180.56.2` from worker `fb9zq-13783`, `14.136.99.142` from worker `sw8ck-13733`) drifted out of the whitelist at some point on or before Apr 30. Bright Data returns a 407-style error envelope in `body.headers.x-brd-err-code: client_10030` but the outer HTTP wrapper sees a clean 200 and only the body field comes back empty — easy to misdiagnose as a transient network issue.
+**Root cause**: zone `serp_api1` enforces source-IP whitelisting. The cluster's egress IPs (`<egress-ip-1>` from `<worker-1>`, `<egress-ip-2>` from `<worker-2>`) drifted out of the whitelist at some point on or before Apr 30. Bright Data returns a 407-style error envelope in `body.headers.x-brd-err-code: client_10030` but the outer HTTP wrapper sees a clean 200 and only the body field comes back empty — easy to misdiagnose as a transient network issue.
 
 **Detection**: spotted during the user's halu debugging session when chunks looked clean but extraction kept timing out. Direct curl to the Bright Data API revealed `client_10030: The IP address from which you are sending this request: <ip> is not whitelisted in this zone's settings. To resolve this issue, add it to the "Allowed IPs" list https://brightdata.com/cp/zones/serp_api1/access_params?id=hl_b51bf4c2`.
 
@@ -265,7 +265,7 @@ Configuration env vars:
 
 ### 6.3 🟢 BGE service dynamic batching
 
-Earlier in the week, the BGE embedding service at `100.99.185.93:8765` (used by halu evidence-graph layer) used a global `_embed_lock` that serialised all requests, causing throughput to plateau at ~8 rps regardless of client concurrency. Replaced with a `MicroBatcher` that coalesces concurrent requests within a 20ms window into a single forward pass. Throughput improved ~3-5x; ReadTimeouts on halu judge calls dropped to near zero.
+Earlier in the week, the BGE embedding service at `<embedding-host>:8765` (used by halu evidence-graph layer) used a global `_embed_lock` that serialised all requests, causing throughput to plateau at ~8 rps regardless of client concurrency. Replaced with a `MicroBatcher` that coalesces concurrent requests within a 20ms window into a single forward pass. Throughput improved ~3-5x; ReadTimeouts on halu judge calls dropped to near zero.
 
 The earliest BGE-affected halu runs (`deepseek-A`, `kimi-B`) ran before this fix landed, hence their lower coverage.
 

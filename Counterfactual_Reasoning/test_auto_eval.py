@@ -24,8 +24,11 @@ from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(__file__))
 
-# Reuse data loading from the browse script
-sys.path.insert(0, str(Path("/mnt/shared-storage-user/fengxinshun/AISci/datasets")))
+# Reuse data loading from the browse script.
+# Set AGDEBUGGER_DATASETS_DIR to your local checkout of the datasets package.
+_DATASETS_DIR = os.environ.get("AGDEBUGGER_DATASETS_DIR", "")
+if _DATASETS_DIR:
+    sys.path.insert(0, str(Path(_DATASETS_DIR)))
 from browse_bio_graph_cluster_examples import (
     load_component_nodes,
     load_examples_in_component,
@@ -222,7 +225,7 @@ async def evaluate(
 # CLI
 # ---------------------------------------------------------------------------
 def main() -> None:
-    datasets_dir = Path("/mnt/shared-storage-user/fengxinshun/AISci/datasets")
+    datasets_dir = Path(os.environ.get("AGDEBUGGER_DATASETS_DIR", ""))
 
     parser = argparse.ArgumentParser(description="Auto-evaluate agent on bio-graph MCQ examples")
     parser.add_argument(

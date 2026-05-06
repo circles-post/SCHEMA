@@ -3,8 +3,7 @@
 Mirrors the gating the generator uses: min_confidence=0.7, support>=2, and
 `profile_subgraph_evidence` strength bins. Run as a module from the parent:
 
-    PYTHONPATH=/mnt/shared-storage-user/ai4good2-share/fengxinshun/datasetsa \\
-    python -m question_generation.scripts.hop_statistics \\
+    PYTHONPATH=.. python -m question_generation.scripts.hop_statistics \\
       --triples  /path/to/normalized_triples.jsonl \\
       --chunks   /path/to/chunks.jsonl
 """

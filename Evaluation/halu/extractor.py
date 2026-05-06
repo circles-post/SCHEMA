@@ -24,7 +24,7 @@ from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
-# pubmed_graph lives one directory up (datasetsa/) — make sure it's on sys.path
+# pubmed_graph is a sibling package one level up — make sure it's on sys.path
 _EVAL_DIR = Path(__file__).resolve().parents[1]
 _PARENT = _EVAL_DIR.parent
 if str(_PARENT) not in sys.path:

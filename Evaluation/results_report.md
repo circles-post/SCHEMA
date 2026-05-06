@@ -131,8 +131,8 @@ Slice from `halu_summary.json.aggregate.per_question_type`. Lower = fewer halluc
 * **Parallelism**: 2 concurrent samples per model.
 * **Per-model endpoint routing**:
   * `intern-s1-pro` → `https://chat.intern-ai.org.cn/api/v1` (different vendor + key)
-  * `doubao-*` / `llama-4-scout` / `grok-*` → `https://api.boyuerichdata.opensphereai.com/v1` (more stable HTTPS gateway via local proxy)
-  * Other models → `http://35.220.164.252:3888/v1` (direct connect, default Boyue gateway)
+  * `doubao-*` / `llama-4-scout` / `grok-*` → `<boyue-https-base-url>` (more stable HTTPS gateway via local proxy)
+  * Other models → `<boyue-http-base-url>` (direct connect, default Boyue gateway)
 * **Thinking-model patch** (`evaluation/thinking_model_patch.py`): registers a custom autogen transformer for `deepseek-v4`, `glm-5`, `kimi-k2`, `intern-s1`, `bailian/deepseek-v4` so multi-turn requests preserve `reasoning_content`. Also lifts `reasoning_content` into `content` on tool-call responses (autogen otherwise drops it).
 
 ---

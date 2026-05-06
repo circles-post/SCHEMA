@@ -32,8 +32,8 @@ from typing import Any, Iterable
 
 from dotenv import load_dotenv
 
-# Make the parent datasetsa/ importable so evaluation/, pubmed_graph/,
-# question_generation/ all resolve regardless of CWD.
+# Make the parent dir importable so evaluation/, pubmed_graph/,
+# question_generation/ all resolve as sibling packages regardless of CWD.
 _HERE = Path(__file__).resolve().parent
 _PARENT = _HERE.parent
 if str(_PARENT) not in sys.path:
@@ -63,9 +63,9 @@ _DIRECT_CONNECT_HOSTS = tuple(
 #   * Models hosted on an entirely different vendor — different base URL AND
 #     different API key (intern-s1-pro on chat.intern-ai.org.cn).
 _DEFAULT_MODEL_OVERRIDES: dict[str, dict[str, str]] = {
-    "doubao-seed-2-0-pro-260215": {"base_url": "https://api.boyuerichdata.opensphereai.com/v1"},
-    "llama-4-scout":              {"base_url": "https://api.boyuerichdata.opensphereai.com/v1"},
-    "grok-4-1-fast-reasoning":    {"base_url": "https://api.boyuerichdata.opensphereai.com/v1"},
+    "doubao-seed-2-0-pro-260215": {"base_url": "<boyue-https-base-url>"},
+    "llama-4-scout":              {"base_url": "<boyue-https-base-url>"},
+    "grok-4-1-fast-reasoning":    {"base_url": "<boyue-https-base-url>"},
     "intern-s1-pro":              {"base_url": "https://chat.intern-ai.org.cn/api/v1",
                                    "api_key_env": "INTERN_API_KEY"},
 }
@@ -104,17 +104,15 @@ def _fix_no_proxy_for_host(host: str) -> None:
     ``no_proxy`` / ``NO_PROXY`` so httpx connects directly and does NOT route
     through ``$http_proxy``.
 
-    For other hosts (e.g. ``api.boyuerichdata.opensphereai.com``), this is a
+    For domain-name hosts (the HTTPS Boyue gateway), this is a
     no-op so httpx goes through the proxy as configured by the env.
 
-    The original Boyue gateway at ``35.220.164.252:3888`` is reachable directly
-    but the local HTTP proxy mangles its tool-call POST bodies, returning 404s
-    like ``Invalid URL (T /v1/chat/completions)``. Adding it to no_proxy fixes
-    that. The newer HTTPS endpoint, by contrast, is only reachable via the
-    proxy and we should NOT touch its no_proxy state.
+    Some Boyue gateways are reachable directly while others require an
+    upstream HTTP proxy; for direct-connect hosts the local proxy can mangle
+    tool-call POST bodies and return 404s, so we add them to ``no_proxy``.
 
-    httpx doesn't understand CIDR notation — entries like ``35.220.164.252/32``
-    are matched as the literal substring, missing the bare host. We strip CIDR
+    httpx doesn't understand CIDR notation — CIDR entries like ``ip/32``
+    are matched as a literal substring, missing the bare host. We strip CIDR
     masks to plain IPs and ensure the bare host is present.
     """
     if host not in _DIRECT_CONNECT_HOSTS:
@@ -713,7 +711,10 @@ async def _main_async() -> int:
     # override=True so re-running after editing .env actually picks up changes.
     load_dotenv(args.env_file, override=True)
 
-    base_url = os.environ.get("BOYUE_BASE_URL", "http://35.220.164.252:3888/v1").strip()
+    base_url = os.environ.get("BOYUE_BASE_URL", "").strip()
+    if not base_url:
+        print(f"ERROR: BOYUE_BASE_URL is empty. Set it in {args.env_file}.", file=sys.stderr)
+        return 2
     api_key = os.environ.get("BOYUE_API_KEY", "").strip()
     if not api_key:
         print(f"ERROR: BOYUE_API_KEY is empty. Set it in {args.env_file}.", file=sys.stderr)

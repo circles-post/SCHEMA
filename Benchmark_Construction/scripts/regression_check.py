@@ -9,7 +9,7 @@ each stage 3 commit can be gated on a configurable threshold.
 Usage:
     python scripts/regression_check.py \\
         --baseline benchmark_runs/baseline_pre_refactor/normalized_triples.baseline.jsonl \\
-        --candidate /tmp/datasetsa_post_refactor/normalized_triples.baseline.jsonl \\
+        --candidate /tmp/pubmed_graph_post_refactor/normalized_triples.baseline.jsonl \\
         --min-recall 0.90
 
 The match key is (head, head_type, normalized_relation, tail, tail_type).

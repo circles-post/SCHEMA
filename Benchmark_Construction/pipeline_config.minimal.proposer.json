@@ -1,5 +1,5 @@
 {
-  "project_name": "datasetsa_minimal_run_with_proposer",
+  "project_name": "pubmed_graph_minimal_run_with_proposer",
   "env_file": ".env",
   "seed_keywords": [
     "FGFR3 urothelial carcinoma"
@@ -50,7 +50,7 @@
   },
   "paper_cache": {
     "enabled": true,
-    "cache_dir": "/tmp/datasetsa_minimal_cache",
+    "cache_dir": "/tmp/pubmed_graph_minimal_cache",
     "store_pdf": false,
     "store_xml": true,
     "store_text": true,
@@ -76,11 +76,11 @@
     "distinct_doc_threshold": 1,
     "max_proposals_per_kind": 6,
     "require_grounding": true,
-    "cache_dir": "/tmp/datasetsa_proposer_cache",
+    "cache_dir": "/tmp/pubmed_graph_proposer_cache",
     "canonicalizer": {
       "min_hits": 1,
       "min_distinct_sources": 1,
-      "cache_dir": "/tmp/datasetsa_canonicalizer_cache",
+      "cache_dir": "/tmp/pubmed_graph_canonicalizer_cache",
       "sciverse": {"enabled": true, "num_results": 3, "timeout_seconds": 60},
       "pubmed": {"enabled": true, "retmax": 2},
       "mesh": {"enabled": true, "limit": 2}

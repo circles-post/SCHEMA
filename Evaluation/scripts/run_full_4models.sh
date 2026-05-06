@@ -31,7 +31,7 @@
 
 set -euo pipefail
 
-ROOT="/mnt/shared-storage-user/ai4good2-share/fengxinshun/datasetsa"
+ROOT="<repo-root>"
 
 : "${WORKERS:=2}"
 : "${RUN_NAME:=full_4models_$(date +%Y%m%d)}"

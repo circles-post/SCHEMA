@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
-source /mnt/shared-storage-user/ai4good2-share/fengxinshun/datasetsa/triple_extraction_env.sh
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"/triple_extraction_env.sh
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PYTHON_BIN="/mnt/shared-storage-user/fengxinshun/miniconda3/miniconda3/envs/new_rl/bin/python"
+PYTHON_BIN="${PYTHON:-python}"
 BASE_CONFIG="$ROOT_DIR/pipeline_config.benchmark.json"
 PIPELINE_ENTRY="$ROOT_DIR/literature_pipeline.py"
 MODE="full"

@@ -1,5 +1,5 @@
 {
-  "project_name": "datasetsa_smoke_test",
+  "project_name": "pubmed_graph_smoke_test",
   "env_file": ".env",
   "seed_keywords": [
     "Bladder Cancer"
@@ -58,7 +58,7 @@
   },
   "paper_cache": {
     "enabled": true,
-    "cache_dir": "/tmp/datasetsa_smoke_cache",
+    "cache_dir": "/tmp/pubmed_graph_smoke_cache",
     "store_pdf": false,
     "store_xml": true,
     "store_text": true,

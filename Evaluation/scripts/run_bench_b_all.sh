@@ -34,8 +34,8 @@
 # Don't `set -e`: keep going to the next model when one fails.
 set -uo pipefail
 
-ROOT="/mnt/shared-storage-user/ai4good2-share/fengxinshun/datasetsa"
-: "${PY:=/mnt/shared-storage-user/fengxinshun/miniconda3/miniconda3/envs/agentdebug/bin/python}"
+ROOT="<repo-root>"
+: "${PY:=python}"
 : "${RUN_NAME:=full_models_$(date +%Y%m%d)}"
 : "${WORKERS:=2}"
 : "${TIMEOUT:=600}"

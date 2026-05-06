@@ -26,7 +26,7 @@
 
 set -euo pipefail
 
-REPO_ROOT="/mnt/shared-storage-user/ai4good2-share/fengxinshun/datasetsa"
+REPO_ROOT="<repo-root>"
 cd "$REPO_ROOT"
 
 # --- 1. ensure sandbox host env does not leak from a prior session ----

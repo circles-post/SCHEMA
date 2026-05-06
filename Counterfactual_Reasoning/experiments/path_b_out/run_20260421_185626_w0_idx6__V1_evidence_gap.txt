@@ -1,8 +1,0 @@
-=== run_20260421_185626_w0_idx6 / V1_evidence_gap / outcome=ok ===
-
-[init_answer] option1
-[ground_truth] option 3
-[target_turn] 10
-
-[rewritten_text]
-I assumed that engineering novel types of proteins for crystallization is a common application of synthetic biology. The evidence confirms synthetic biology techniques are used in protein engineering to enhance crystallization, but does not specifically address the engineering of novel types of proteins for crystallization as a common application. My assumption required the engineering of novel types of proteins for crystallization to be a common application, but the evidence establishes only that synthetic biology is used in protein engineering for crystallization enhancement; it does not establish that this specific application is common. I should therefore re-match each listed mechanism against what the evidence actually establishes, not against my assumption.

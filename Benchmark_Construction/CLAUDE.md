@@ -51,10 +51,10 @@ Recommended denser-graph parameters (already used in current configs): `chunk_wo
 Always source the extraction credentials first when extraction will run:
 
 ```bash
-source /mnt/shared-storage-user/ai4good2-share/fengxinshun/datasetsa/triple_extraction_env.sh
+source ./triple_extraction_env.sh
 ```
 
-Python interpreter used by the run scripts: `/mnt/shared-storage-user/fengxinshun/miniconda3/miniconda3/envs/new_rl/bin/python`. The `new_graphcompass` env also has the runtime deps.
+Set `PYTHON` (or `PYTHON_BIN`) in the env to the python interpreter you want the run scripts to use; otherwise they default to `python` on `$PATH`.
 
 End-to-end run (retrieval → fulltext → chunks → triples → graph):
 
@@ -77,7 +77,7 @@ There is no test suite, linter, or build step. The "tests" are the smoke runs un
 ## Important gotchas
 
 - **Landing-page quality filter is load-bearing.** If extraction returns 0 triples on a config that previously worked, first check `chunks.jsonl` for HTML/CSS noise (`html{`, `font-family`, `window.dataLayer`, `Log in`, `Your privacy choices`, `Springer Nature`). If present, the cleaning logic in `pubmed_graph/utils.py` regressed.
-- **Remote embedding service** at e.g. `http://100.99.185.93:8765` or `http://100.99.141.119:8765` may need `NO_PROXY=<host> no_proxy=<host>` to bypass an HTTP proxy. If the service is down, set `scoring.sapbert.enabled=false` and `embedding.enabled=false` to validate the rest of the chain.
+- **Remote embedding service** at `http://<embedding-host>:8765` may need `NO_PROXY=<host> no_proxy=<host>` to bypass an HTTP proxy. If the service is down, set `scoring.sapbert.enabled=false` and `embedding.enabled=false` to validate the rest of the chain.
 - **`paper_cache/`** is keyed by DOI → PMCID → PMID → title-hash. `phase_summary.json` reports `cache_hits / cache_misses / pdf_cache_hits / xml_cache_hits / text_cache_hits / network_fetches_avoided`. Don't blow away the whole cache to fix a stale entry — invalid entries are revalidated automatically.
 - **Output directories proliferate** (`pipeline_outputs_*`, `benchmark_runs/*`). Each run is a self-contained snapshot — `phase_summary.json` is the canonical entrypoint for inspecting it.
 - **`question_generation/` is out of scope** for this guide; do not modify it as a side-effect of pipeline work.
@@ -86,4 +86,4 @@ There is no test suite, linter, or build step. The "tests" are the smoke runs un
 
 - Workflow design notes (Chinese): `workflow_mds/pubmed_graph_workflow.md` — most current source of truth for phase semantics, recent fixes, and recommended configs.
 - Pipeline overview: `README_literature_pipeline.md`.
-- Local model paths: SapBERT and BGE-Large under `/mnt/shared-storage-user/ai4good2-share/fengxinshun/embedding_models/`.
+- Local model paths: SapBERT and BGE-Large under `<embeddings-dir>/` — set the configs' `embedding.model_path` and `scoring.sapbert.model_path` to your local download.

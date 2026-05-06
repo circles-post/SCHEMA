@@ -12,8 +12,9 @@ retrieved via the 4 external tools:
 
 Design notes
 ------------
-1. The 4 tools live in a sibling project at ``/mnt/shared-storage-user/
-   fengxinshun/AISci/...`` and are not pip-installed. We inject two
+1. The 4 tools live in sibling projects (paths come from
+   ``QG_AGENTDEBUG_PATH`` and ``QG_SCIVERSE_PATH`` env vars) and are not
+   pip-installed. We inject two
    ``sys.path`` entries at module import time. If import fails, the agent
    degrades to ``TOOLS_AVAILABLE=False`` and every ``corroborate_claim``
    call returns ``tool_unavailable`` immediately.
@@ -55,8 +56,8 @@ logger = logging.getLogger("question_generation.corroboration")
 # ---------------------------------------------------------------------------
 # Tool discovery: inject sibling source dirs into sys.path and import.
 # ---------------------------------------------------------------------------
-_AGENTDEBUG_PATH = "/mnt/shared-storage-user/fengxinshun/AISci/AgentDebug/agdebugger"
-_SCIVERSE_PATH = "/mnt/shared-storage-user/fengxinshun/AISci/sciverse"
+_AGENTDEBUG_PATH = os.environ.get("QG_AGENTDEBUG_PATH", "")
+_SCIVERSE_PATH = os.environ.get("QG_SCIVERSE_PATH", "")
 
 TOOLS_AVAILABLE = False
 _TOOL_IMPORT_ERROR: str | None = None
@@ -66,14 +67,14 @@ _literature_search = None
 _sciverse_fetch_markdown = None
 
 for _p in (_AGENTDEBUG_PATH, _SCIVERSE_PATH):
-    if _p not in sys.path:
+    if _p and _p not in sys.path:
         sys.path.insert(0, _p)
 
 # Auto-load SCIVERSE_API_TOKEN (and anything else) from the sibling .env
 # file so a user who just sourced agentdebug env still gets the sciverse
 # creds the toolkit expects. Never overwrites an already-set var.
-_SCIVERSE_ENV_FILE = Path(_SCIVERSE_PATH) / ".env"
-if _SCIVERSE_ENV_FILE.exists():
+_SCIVERSE_ENV_FILE = Path(_SCIVERSE_PATH) / ".env" if _SCIVERSE_PATH else None
+if _SCIVERSE_ENV_FILE and _SCIVERSE_ENV_FILE.exists():
     try:
         for _line in _SCIVERSE_ENV_FILE.read_text(encoding="utf-8").splitlines():
             _line = _line.strip()
@@ -105,13 +106,13 @@ except Exception as exc:  # pragma: no cover — env-dependent
 # Default proxy URL — preference order:
 #   1. QG_CORROBORATION_PROXY (explicit override for this feature)
 #   2. The shell's existing http_proxy / HTTP_PROXY (what the user set)
-#   3. The pjlab internal proxy (legacy fallback for old infra)
+#   3. Empty string (no proxy installed)
 # We never mutate proxy env vars at module level — only inside _scoped_proxy.
 _DEFAULT_PROXY = (
     os.environ.get("QG_CORROBORATION_PROXY")
     or os.environ.get("http_proxy")
     or os.environ.get("HTTP_PROXY")
-    or "http://fengxinshun:xjI8Tv1YQol4j6fKtxVJRwuJ1Rtn1grKpjC4EMKF1GjgGKgDWrZG1hZW6l5O@proxy.h.pjlab.org.cn:23128"
+    or ""
 )
 _DEFAULT_NO_PROXY = os.environ.get("no_proxy") or os.environ.get("NO_PROXY") or ""
 _PROXY_ENV_KEYS = ("http_proxy", "https_proxy", "HTTP_PROXY", "HTTPS_PROXY")

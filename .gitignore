@@ -1,0 +1,34 @@
+# secrets / local credentials
+**/.env
+
+# IDE / agent local state
+.claude/
+.cursor/
+.codex
+
+# python
+__pycache__/
+*.pyc
+*.pyo
+build/
+dist/
+*.egg-info/
+.pytest_cache/
+
+# run artifacts (regeneratable)
+**/tmp_*/
+**/pipeline_outputs*/
+**/benchmark_runs/
+**/logs/
+**/paper_cache/
+**/*.val_cache/
+**/.corrob_cache/
+**/experiments/path_b_out*/
+**/mcp_tools_validation/
+**/debug_workflow/test_output_e2e/
+
+# author-only debug scaffolding (kept on disk, not in public repo)
+**/debug_workflow/
+
+# user-supplied during anonymization (delete before publishing)
+ANONYMIZE_TODO.md

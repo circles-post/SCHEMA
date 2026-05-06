@@ -99,10 +99,10 @@
     },
     "sapbert": {
       "enabled": true,
-      "model_path": "/mnt/shared-storage-user/ai4good2-share/fengxinshun/embedding_models/SapBERT-from-PubMedBERT-fulltext",
+      "model_path": "<embeddings-dir>/SapBERT-from-PubMedBERT-fulltext",
       "batch_size": 8,
       "device": "cpu",
-      "service_url": "http://100.99.247.97:8765",
+      "service_url": "http://<embedding-host>:8765",
       "remote_model": "sapbert",
       "request_timeout": 120.0,
       "verify_ssl": true
@@ -110,11 +110,11 @@
   },
   "embedding": {
     "enabled": true,
-    "model_path": "/mnt/shared-storage-user/ai4good2-share/fengxinshun/embedding_models/bge-large-en",
+    "model_path": "<embeddings-dir>/bge-large-en",
     "batch_size": 8,
     "device": "cpu",
     "instruction_prefix": "",
-    "service_url": "http://100.99.247.97:8765",
+    "service_url": "http://<embedding-host>:8765",
     "remote_model": "bge",
     "request_timeout": 120.0,
     "verify_ssl": true
@@ -130,7 +130,7 @@
   },
   "paper_cache": {
     "enabled": true,
-    "cache_dir": "/mnt/shared-storage-user/ai4good2-share/fengxinshun/datasetsa/paper_cache",
+    "cache_dir": "./paper_cache",
     "store_pdf": true,
     "store_xml": true,
     "store_text": true,
@@ -138,7 +138,7 @@
   },
   "sciverse": {
     "enabled": false,
-    "toolkit_root": "/mnt/shared-storage-user/fengxinshun/AISci/sciverse",
+    "toolkit_root": "<sciverse-dir>",
     "search_top_k": 5,
     "language": "en",
     "require_match": true,

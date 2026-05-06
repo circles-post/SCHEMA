@@ -75,7 +75,7 @@ def main() -> None:
         {
             "min_hits": 1,
             "min_distinct_sources": 1,
-            "cache_dir": "/tmp/datasetsa_kb_probe_cache",
+            "cache_dir": "/tmp/pubmed_graph_kb_probe_cache",
             "sciverse": {"enabled": True, "num_results": 3, "timeout_seconds": 60},
             "pubmed": {"enabled": True, "retmax": 3},
             "mesh": {"enabled": True, "limit": 3},

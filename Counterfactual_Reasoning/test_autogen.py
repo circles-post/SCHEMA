@@ -32,18 +32,9 @@ from websearch_tools import web_search, web_fetch
 # Config
 # ---------------------------------------------------------------------------
 _MODEL_NAME = os.environ.get("AGENTDEBUG_MODEL_NAME", "gpt-4o")
-_MODEL_API_KEY = os.environ.get(
-    "AGENTDEBUG_OPENAI_API_KEY",
-    "sk-ZnvhxhwyXok91ezpbDBcObLWa8GehlZtMaqnYT3ziVwhnBzC",
-)
-_MODEL_BASE_URL = os.environ.get(
-    "AGENTDEBUG_OPENAI_BASE_URL",
-    "http://34.13.73.248:3888/v1",
-)
-_TOOLUNIVERSE_DIR = os.environ.get(
-    "TOOLUNIVERSE_DIR",
-    "/mnt/shared-storage-user/fengxinshun/AISci/ToolUniverse/",
-)
+_MODEL_API_KEY = os.environ.get("AGENTDEBUG_OPENAI_API_KEY", "")
+_MODEL_BASE_URL = os.environ.get("AGENTDEBUG_OPENAI_BASE_URL", "")
+_TOOLUNIVERSE_DIR = os.environ.get("TOOLUNIVERSE_DIR", "")
 
 
 def _mask_secret(value: str, *, visible_prefix: int = 6, visible_suffix: int = 4) -> str:

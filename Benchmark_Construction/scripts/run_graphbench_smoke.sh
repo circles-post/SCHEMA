@@ -17,12 +17,12 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-PYTHON_BIN="${PYTHON_BIN:-/mnt/shared-storage-user/fengxinshun/miniconda3/miniconda3/envs/agentdebug/bin/python}"
+PYTHON_BIN="${PYTHON_BIN:-python}"
 ENV_SCRIPT="$ROOT_DIR/triple_extraction_env.sh"
 PIPELINE_ENTRY="$ROOT_DIR/literature_pipeline.py"
-EMBEDDING_HOST="${EMBEDDING_HOST:-100.99.247.97}"
+EMBEDDING_HOST="${EMBEDDING_HOST:-<embedding-host>}"
 
-OUTPUT_DIR="/tmp/datasetsa_graphbench_smoke"
+OUTPUT_DIR="/tmp/pubmed_graph_graphbench_smoke"
 PROPOSER_ENABLED="true"
 KEEP_OUTPUT="false"
 
@@ -93,7 +93,7 @@ trap cleanup EXIT
 import json, sys
 out_path, proposer_on = sys.argv[1], sys.argv[2] == "true"
 config = {
-    "project_name": "datasetsa_graphbench_smoke",
+    "project_name": "pubmed_graph_graphbench_smoke",
     "env_file": ".env",
     "seed_keywords": ["FGFR3 urothelial carcinoma"],
     "keyword_expansion": {
@@ -139,7 +139,7 @@ config = {
     },
     "paper_cache": {
         "enabled": True,
-        "cache_dir": "/tmp/datasetsa_smoke_cache",
+        "cache_dir": "/tmp/pubmed_graph_smoke_cache",
         "store_pdf": False,
         "store_xml": True,
         "store_text": True,
@@ -167,11 +167,11 @@ if proposer_on:
         "distinct_doc_threshold": 1,
         "max_proposals_per_kind": 4,
         "require_grounding": True,
-        "cache_dir": "/tmp/datasetsa_smoke_proposer_cache",
+        "cache_dir": "/tmp/pubmed_graph_smoke_proposer_cache",
         "canonicalizer": {
             "min_hits": 1,
             "min_distinct_sources": 1,
-            "cache_dir": "/tmp/datasetsa_smoke_canon_cache",
+            "cache_dir": "/tmp/pubmed_graph_smoke_canon_cache",
             "sciverse": {"enabled": True, "num_results": 3, "timeout_seconds": 30},
             "pubmed":   {"enabled": True, "retmax": 2},
             "mesh":     {"enabled": True, "limit": 2},

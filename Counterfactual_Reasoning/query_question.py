@@ -14,10 +14,14 @@ Usage:
 
 import argparse
 import json
+import os
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path("/mnt/shared-storage-user/fengxinshun/AISci/datasets")))
+# Set AGDEBUGGER_DATASETS_DIR to your local checkout of the datasets package.
+_DATASETS_DIR = os.environ.get("AGDEBUGGER_DATASETS_DIR", "")
+if _DATASETS_DIR:
+    sys.path.insert(0, str(Path(_DATASETS_DIR)))
 from browse_bio_graph_cluster_examples import (
     load_component_nodes,
     load_examples_in_component,
@@ -84,7 +88,7 @@ def search_examples(examples: list, query: str) -> list:
 
 
 def main() -> None:
-    datasets_dir = Path("/mnt/shared-storage-user/fengxinshun/AISci/datasets")
+    datasets_dir = Path(_DATASETS_DIR)
 
     parser = argparse.ArgumentParser(description="Search questions in bio-graph dataset")
     parser.add_argument("--component-id", type=int, required=True, help="Component ID")

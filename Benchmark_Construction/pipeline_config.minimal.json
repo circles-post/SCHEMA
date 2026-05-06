@@ -1,5 +1,5 @@
 {
-  "project_name": "datasetsa_minimal_run",
+  "project_name": "pubmed_graph_minimal_run",
   "env_file": ".env",
   "seed_keywords": [
     "FGFR3 urothelial carcinoma"
@@ -58,7 +58,7 @@
   },
   "paper_cache": {
     "enabled": true,
-    "cache_dir": "/tmp/datasetsa_minimal_cache",
+    "cache_dir": "/tmp/pubmed_graph_minimal_cache",
     "store_pdf": false,
     "store_xml": true,
     "store_text": true,

@@ -92,7 +92,7 @@ class OpenAIAdapterSampler(SamplerBase):
 
         sampler = OpenAIAdapterSampler(
             api_key="sk-...",
-            base_url="http://34.13.73.248:3888/v1",
+            base_url="<openai-compatible-base-url>",
             model="gpt-4o-mini",
         )
     """

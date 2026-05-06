@@ -19,11 +19,11 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-PYTHON_BIN="${PYTHON_BIN:-/mnt/shared-storage-user/fengxinshun/miniconda3/miniconda3/envs/new_rl/bin/python}"
+PYTHON_BIN="${PYTHON_BIN:-python}"
 ENV_SCRIPT="$ROOT_DIR/triple_extraction_env.sh"
 SCRIPT="$ROOT_DIR/scripts/add_benchmark.py"
 
-EMBEDDING_HOST="${EMBEDDING_HOST:-100.99.247.97}"
+EMBEDDING_HOST="${EMBEDDING_HOST:-<embedding-host>}"
 
 [[ -x "$PYTHON_BIN" ]] || { echo "[FAIL] python not executable: $PYTHON_BIN" >&2; exit 1; }
 [[ -f "$SCRIPT"     ]] || { echo "[FAIL] missing $SCRIPT" >&2; exit 1; }

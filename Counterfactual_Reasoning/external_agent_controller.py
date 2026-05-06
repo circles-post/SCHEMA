@@ -79,12 +79,10 @@ def _extract_first_json_object(text: str) -> Dict[str, Any]:
 
 
 def _configure_external_llm_proxy(base_url: str) -> None:
-    proxy_url = os.environ.get(
-        "http_proxy",
-        "http://fengxinshun:xjI8Tv1YQol4j6fKtxVJRwuJ1Rtn1grKpjC4EMKF1GjgGKgDWrZG1hZW6l5O@proxy.h.pjlab.org.cn:23128",
-    )
-    os.environ.setdefault("http_proxy", proxy_url)
-    os.environ.setdefault("https_proxy", proxy_url)
+    proxy_url = os.environ.get("http_proxy", "")
+    if proxy_url:
+        os.environ.setdefault("http_proxy", proxy_url)
+        os.environ.setdefault("https_proxy", proxy_url)
 
     no_proxy = os.environ.get("no_proxy", "")
     fixed_no_proxy = re.sub(r"(\d+\.\d+\.\d+\.\d+)/\d+", r"\1", no_proxy)

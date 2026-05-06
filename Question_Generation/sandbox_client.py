@@ -1,8 +1,7 @@
 """Thin synchronous client for running Python in a remote sandbox.
 
-Mirrors the request/response shape of
-``/mnt/shared-storage-user/fengxinshun/Alita/OAgent/OAgents/RL-Factory/envs/tools/python.py``
-so the same backend can be reused. The remote endpoint is configured by the
+Mirrors the request/response shape of ``RL-Factory/envs/tools/python.py`` so
+the same backend can be reused. The remote endpoint is configured by the
 ``SANDBOX_HOST`` constant below (or by setting the ``QG_SANDBOX_HOST`` env var).
 
 When ``SANDBOX_HOST`` is empty *or* the ``sandbox_fusion`` package is not
@@ -30,7 +29,7 @@ from typing import Any
 # Both values can also be overridden at runtime via the QG_SANDBOX_HOST and
 # QG_SANDBOX_PORT environment variables.
 # ---------------------------------------------------------------------------
-SANDBOX_HOST: str = os.getenv("QG_SANDBOX_HOST", "100.99.239.71").strip()
+SANDBOX_HOST: str = os.getenv("QG_SANDBOX_HOST", "").strip()
 SANDBOX_PORT: int = int(os.getenv("QG_SANDBOX_PORT", "8080"))
 DEFAULT_TIMEOUT: float = float(os.getenv("QG_SANDBOX_TIMEOUT", "20.0"))
 

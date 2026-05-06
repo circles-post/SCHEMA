@@ -119,7 +119,7 @@ _SCIVERSE_LITERATURE_SEARCH = None
 _SCIVERSE_LITERATURE_SEARCH_IMPORT_FAILED = False
 _SCIVERSE_FETCH_MARKDOWN = None
 _SCIVERSE_FETCH_MARKDOWN_IMPORT_FAILED = False
-_DEFAULT_SCIVERSE_DIR = "/mnt/shared-storage-user/fengxinshun/AISci/sciverse"
+_DEFAULT_SCIVERSE_DIR = os.environ.get("SCIVERSE_DIR", "")
 
 
 def _load_sciverse_literature_search():

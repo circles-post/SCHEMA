@@ -122,23 +122,24 @@ async def literature_fetch(
         )
 
 # Ensure HTTP proxy is configured so external LLM endpoints are reachable.
-_PROXY_URL = os.environ.get(
-    "http_proxy",
-    "http://fengxinshun:xjI8Tv1YQol4j6fKtxVJRwuJ1Rtn1grKpjC4EMKF1GjgGKgDWrZG1hZW6l5O@proxy.h.pjlab.org.cn:23128",
-)
-os.environ.setdefault("http_proxy", _PROXY_URL)
-os.environ.setdefault("https_proxy", _PROXY_URL)
+# Set http_proxy / https_proxy in your shell before launching if your network
+# requires an upstream proxy to reach the LLM gateway.
+_PROXY_URL = os.environ.get("http_proxy", "")
+if _PROXY_URL:
+    os.environ.setdefault("http_proxy", _PROXY_URL)
+    os.environ.setdefault("https_proxy", _PROXY_URL)
 
 # Fix no_proxy so the LLM endpoint goes through the proxy:
 # 1) httpx does not support CIDR notation — strip subnet masks
-# 2) Remove the LLM endpoint IP so it is NOT bypassed
+# 2) Remove the LLM endpoint host (set via AGENTDEBUG_LLM_HOST) so it is NOT
+#    bypassed by no_proxy.
 _no_proxy = os.environ.get("no_proxy", "")
 _fixed_no_proxy = re.sub(r"(\d+\.\d+\.\d+\.\d+)/\d+", r"\1", _no_proxy)
-# Remove exact LLM host entry (with or without /32)
-_LLM_HOST = "35.220.164.252"
-_fixed_no_proxy = ",".join(
-    e for e in _fixed_no_proxy.split(",") if e.strip() != _LLM_HOST
-)
+_LLM_HOST = os.environ.get("AGENTDEBUG_LLM_HOST", "").strip()
+if _LLM_HOST:
+    _fixed_no_proxy = ",".join(
+        e for e in _fixed_no_proxy.split(",") if e.strip() != _LLM_HOST
+    )
 os.environ["no_proxy"] = _fixed_no_proxy
 os.environ["NO_PROXY"] = _fixed_no_proxy
 
@@ -150,10 +151,7 @@ _MCP_MODEL_NAME = os.environ.get(
     "AGENTDEBUG_MODEL_MCP",
     os.environ.get("AGENTDEBUG_MODEL_NAME", "gpt-4o-mini"),
 )
-_DEFAULT_MODEL_API_KEY = os.environ.get(
-    "AGENTDEBUG_OPENAI_API_KEY",
-    "sk-ZnvhxhwyXok91ezpbDBcObLWa8GehlZtMaqnYT3ziVwhnBzC",
-)
+_DEFAULT_MODEL_API_KEY = os.environ.get("AGENTDEBUG_OPENAI_API_KEY", "")
 _INTERN_MODEL_API_KEY = os.environ.get("AGENTDEBUG_INTERN_API_KEY")
 _MODEL_API_KEY = os.environ.get("AGENTDEBUG_OPENAI_API_KEY_AGENT") or resolve_value_for_model(
     _MODEL_NAME,
@@ -165,10 +163,7 @@ _MCP_MODEL_API_KEY = os.environ.get("AGENTDEBUG_OPENAI_API_KEY_MCP") or resolve_
     _DEFAULT_MODEL_API_KEY,
     intern_value=_INTERN_MODEL_API_KEY,
 )
-_DEFAULT_MODEL_BASE_URL = os.environ.get(
-    "AGENTDEBUG_OPENAI_BASE_URL",
-    "http://35.220.164.252:3888/v1",
-)
+_DEFAULT_MODEL_BASE_URL = os.environ.get("AGENTDEBUG_OPENAI_BASE_URL", "")
 _MODEL_BASE_URL = os.environ.get("AGENTDEBUG_OPENAI_BASE_URL_AGENT") or resolve_base_url_for_model(
     _MODEL_NAME,
     _DEFAULT_MODEL_BASE_URL,
@@ -181,10 +176,7 @@ _MODEL_TIMEOUT_SEC = float(os.environ.get("AGENTDEBUG_MODEL_TIMEOUT_SEC", "300")
 _MODEL_MAX_RETRIES = int(os.environ.get("AGENTDEBUG_MODEL_MAX_RETRIES", "2"))
 _MODEL_EXTRA_BODY = build_openai_extra_body()
 
-_TOOLUNIVERSE_DIR = os.environ.get(
-    "TOOLUNIVERSE_DIR",
-    "/mnt/shared-storage-user/fengxinshun/AISci/ToolUniverse/",
-)
+_TOOLUNIVERSE_DIR = os.environ.get("TOOLUNIVERSE_DIR", "")
 _TOOLUNIVERSE_URL = os.environ.get("AGDEBUGGER_TOOLUNIVERSE_URL", "").strip()
 
 _TOOLUNIVERSE_WORKBENCH: McpWorkbench | None = None

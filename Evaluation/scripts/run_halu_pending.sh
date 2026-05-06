@@ -27,8 +27,8 @@
 
 set -uo pipefail
 
-ROOT="/mnt/shared-storage-user/ai4good2-share/fengxinshun/datasetsa"
-: "${PY:=/mnt/shared-storage-user/fengxinshun/miniconda3/miniconda3/envs/agentdebug/bin/python}"
+ROOT="<repo-root>"
+: "${PY:=python}"
 : "${RUN_NAME:=full_tool_models_20260427}"
 : "${EVIDENCE_CHAIN:=graph,web,literature}"
 : "${EXTRACTOR_CONCURRENCY:=4}"

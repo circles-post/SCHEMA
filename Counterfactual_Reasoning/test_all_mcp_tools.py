@@ -30,22 +30,10 @@ from typing import Any, Callable
 from autogen_ext.tools.mcp import McpWorkbench, StdioServerParams
 
 
-MODEL_API_KEY = os.environ.get(
-    "AGENTDEBUG_OPENAI_API_KEY",
-    "sk-ZnvhxhwyXok91ezpbDBcObLWa8GehlZtMaqnYT3ziVwhnBzC",
-)
-MODEL_BASE_URL = os.environ.get(
-    "AGENTDEBUG_OPENAI_BASE_URL",
-    "http://34.13.73.248:3888/v1",
-)
-TOOLUNIVERSE_DIR = os.environ.get(
-    "TOOLUNIVERSE_DIR",
-    "/mnt/shared-storage-user/fengxinshun/AISci/ToolUniverse/",
-)
-UV_PATH = os.environ.get(
-    "TOOLUNIVERSE_UV_PATH",
-    "/mnt/shared-storage-user/fengxinshun/miniconda3/miniconda3/bin/uv",
-)
+MODEL_API_KEY = os.environ.get("AGENTDEBUG_OPENAI_API_KEY", "")
+MODEL_BASE_URL = os.environ.get("AGENTDEBUG_OPENAI_BASE_URL", "")
+TOOLUNIVERSE_DIR = os.environ.get("TOOLUNIVERSE_DIR", "")
+UV_PATH = os.environ.get("TOOLUNIVERSE_UV_PATH", "uv")
 
 CORE_COMPACT_TOOLS = {
     "list_tools",

@@ -94,7 +94,7 @@ class OntologyProposerAgent:
         self.sample_size = max(int(cfg.get("sample_size", 30)), 1)
         self.evidence_threshold = max(int(cfg.get("evidence_threshold", 2)), 1)
         self.distinct_doc_threshold = max(int(cfg.get("distinct_doc_threshold", 2)), 1)
-        self.cache_dir = Path(cfg.get("cache_dir") or "/tmp/datasetsa_proposer_cache")
+        self.cache_dir = Path(cfg.get("cache_dir") or "/tmp/pubmed_graph_proposer_cache")
         self.cache_dir.mkdir(parents=True, exist_ok=True)
         self.max_proposals_per_kind = int(cfg.get("max_proposals_per_kind", 8))
         self.require_grounding = bool(cfg.get("require_grounding", True))

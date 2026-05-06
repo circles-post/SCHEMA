@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PYTHON_BIN="/mnt/shared-storage-user/fengxinshun/miniconda3/miniconda3/envs/new_graphcompass/bin/python"
+PYTHON_BIN="${PYTHON:-python}"
 CONFIG_PATH="${ROOT_DIR}/pipeline_config.benchmark.q50.json"
 OUTPUT_DIR="${1:-${ROOT_DIR}/benchmark_runs/proteinlmbench_q50_graph}"
 CHUNK_LIMIT="${2:-60}"

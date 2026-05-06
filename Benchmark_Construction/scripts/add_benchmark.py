@@ -45,12 +45,12 @@ from pubmed_graph.workflow import run_pipeline, run_triple_extraction
 
 
 DATASET_ROOTS = {
-    "ProteinLMBench":  "/mnt/shared-storage-user/fengxinshun/AISci/datasets",
-    "PathVQA":         "/mnt/shared-storage-user/fengxinshun/AISci/datasets/path-vqa",
-    "MedXpertQA_MM":   "/mnt/shared-storage-user/fengxinshun/AISci/datasets/MedXpertQA",
-    "SLAKE_EN":        "/mnt/shared-storage-user/fengxinshun/AISci/datasets/SLAKE-vqa-english",
-    "SLAKE_Bilingual": "/mnt/shared-storage-user/fengxinshun/AISci/datasets/SLAKE-bilingual",
-    "MedQBench":       "/mnt/shared-storage-user/fengxinshun/AISci/datasets/MedQ-Bench",
+    "ProteinLMBench":  "<benchmark-data>",
+    "PathVQA":         "<benchmark-data>/path-vqa",
+    "MedXpertQA_MM":   "<benchmark-data>/MedXpertQA",
+    "SLAKE_EN":        "<benchmark-data>/SLAKE-vqa-english",
+    "SLAKE_Bilingual": "<benchmark-data>/SLAKE-bilingual",
+    "MedQBench":       "<benchmark-data>/MedQ-Bench",
 }
 
 

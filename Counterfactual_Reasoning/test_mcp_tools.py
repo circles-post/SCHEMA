@@ -10,8 +10,8 @@ Tests four layers in order:
             each call appears to have succeeded.
 
 Run:
-    conda activate agentdebug
-    cd /mnt/shared-storage-user/fengxinshun/AISci/AgentDebug/agdebugger
+    conda activate <your-conda-env>
+    cd <repo-root>
     python test_mcp_tools.py
 
 Optional: run only specific stages
@@ -43,19 +43,10 @@ from autogen_ext.tools.mcp import McpWorkbench, StdioServerParams
 # Config (mirrors test_agent_debug.py so both files stay in sync)
 # ---------------------------------------------------------------------------
 MODEL_NAME = os.environ.get("AGENTDEBUG_MODEL_NAME", "gpt-4o-mini")
-MODEL_API_KEY = os.environ.get(
-    "AGENTDEBUG_OPENAI_API_KEY",
-    "sk-ZnvhxhwyXok91ezpbDBcObLWa8GehlZtMaqnYT3ziVwhnBzC",
-)
-MODEL_BASE_URL = os.environ.get(
-    "AGENTDEBUG_OPENAI_BASE_URL",
-    "http://34.13.73.248:3888/v1",
-)
+MODEL_API_KEY = os.environ.get("AGENTDEBUG_OPENAI_API_KEY", "")
+MODEL_BASE_URL = os.environ.get("AGENTDEBUG_OPENAI_BASE_URL", "")
 JUDGE_MODEL_NAME = os.environ.get("AGENTDEBUG_JUDGE_MODEL_NAME", "gpt-4o-mini")
-TOOLUNIVERSE_DIR = os.environ.get(
-    "TOOLUNIVERSE_DIR",
-    "/mnt/shared-storage-user/fengxinshun/AISci/ToolUniverse/",
-)
+TOOLUNIVERSE_DIR = os.environ.get("TOOLUNIVERSE_DIR", "")
 TOOLUNIVERSE_UV_PATH = os.environ.get("TOOLUNIVERSE_UV_PATH", "uv")
 
 CORE_COMPACT_TOOLS = {

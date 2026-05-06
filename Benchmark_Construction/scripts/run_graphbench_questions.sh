@@ -23,7 +23,7 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-PYTHON_BIN="${PYTHON_BIN:-/mnt/shared-storage-user/fengxinshun/miniconda3/miniconda3/envs/agentdebug/bin/python}"
+PYTHON_BIN="${PYTHON_BIN:-python}"
 ENV_SCRIPT="$ROOT_DIR/triple_extraction_env.sh"
 QG_DIR="$ROOT_DIR/question_generation"
 QG_ENV="$QG_DIR/.env"
@@ -51,8 +51,8 @@ FORCE_OVERWRITE="false"
 # proxy policy — mirror run_graphbench_full.sh: keep user's proxy intact so
 # the validator LLM + PubMed evidence retrieval can reach public internet,
 # but add internal embedding + sandbox hosts to NO_PROXY.
-EMBEDDING_HOST="${EMBEDDING_HOST:-100.99.247.97}"
-SANDBOX_HOST="${QG_SANDBOX_HOST:-100.99.239.71}"
+EMBEDDING_HOST="${EMBEDDING_HOST:-<embedding-host>}"
+SANDBOX_HOST="${QG_SANDBOX_HOST:-<sandbox-host>}"
 
 usage() {
   cat <<'USAGE'
@@ -96,7 +96,7 @@ Other:
 
 Environment overrides (export before running):
   PYTHON_BIN                Python interpreter (default: agentdebug env)
-  EMBEDDING_HOST            Added to NO_PROXY (default: 100.99.247.97)
+  EMBEDDING_HOST            Added to NO_PROXY (default: <embedding-host>)
 USAGE
 }
 

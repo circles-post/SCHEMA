@@ -29,13 +29,8 @@ from model_routing import resolve_base_url_for_model, resolve_value_for_model
 
 # Reuse existing dataset utilities from the workspace dataset package.
 # Allow override via env so this runner is portable to other workstations.
-DATASETS_DIR = Path(
-    os.environ.get(
-        "AGDEBUGGER_DATASETS_DIR",
-        "/mnt/shared-storage-user/fengxinshun/AISci/datasets",
-    )
-)
-if str(DATASETS_DIR) not in sys.path:
+DATASETS_DIR = Path(os.environ.get("AGDEBUGGER_DATASETS_DIR", ""))
+if DATASETS_DIR.exists() and str(DATASETS_DIR) not in sys.path:
     sys.path.insert(0, str(DATASETS_DIR))
 
 from browse_bio_graph_cluster_examples import (  # noqa: E402

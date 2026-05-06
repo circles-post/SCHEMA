@@ -53,7 +53,7 @@ Key architectural ideas that span multiple files:
 The package is **not** installed; run it as a module with `PYTHONPATH` pointing at the parent so `pubmed_graph` resolves:
 
 ```bash
-PYTHONPATH="/mnt/shared-storage-user/ai4good2-share/fengxinshun/datasetsa" \
+PYTHONPATH=".." \
 python -m question_generation.cli \
   --triples  /path/to/normalized_triples.jsonl \
   --chunks   /path/to/chunks.jsonl \

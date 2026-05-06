@@ -31,8 +31,8 @@ Still remaining for future extension:
 
 ## Local model paths already configured
 
-- SapBERT: `/mnt/shared-storage-user/ai4good2-share/fengxinshun/embedding_models/SapBERT-from-PubMedBERT-fulltext`
-- BGE-Large: `/mnt/shared-storage-user/ai4good2-share/fengxinshun/embedding_models/bge-large-en`
+- SapBERT: `<embeddings-dir>/SapBERT-from-PubMedBERT-fulltext`
+- BGE-Large: `<embeddings-dir>/bge-large-en`
 
 ## Main entrypoints
 

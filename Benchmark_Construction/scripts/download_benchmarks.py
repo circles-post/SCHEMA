@@ -33,7 +33,7 @@ from typing import Callable
 from huggingface_hub import snapshot_download
 
 
-DEFAULT_OUTPUT_DIR = "/mnt/shared-storage-user/fengxinshun/AISci/datasets"
+DEFAULT_OUTPUT_DIR = "<benchmark-data>"
 
 
 @dataclass

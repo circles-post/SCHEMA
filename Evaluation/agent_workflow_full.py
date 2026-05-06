@@ -1,8 +1,8 @@
 """Full agent workflow with retrieval tools + ToolUniverse MCP.
 
-This mirrors ``test_agent_debug.get_agent_team`` from
-``/mnt/shared-storage-user/fengxinshun/AISci/AgentDebug/agdebugger/test_agent_debug.py``,
-but strips the intern-s1 specific logic (rate-limit retries, action-start
+This mirrors ``test_agent_debug.get_agent_team`` from the AgentDebug fork
+(``Counterfactual_Reasoning/test_agent_debug.py`` in this repo), but strips
+the intern-s1 specific logic (rate-limit retries, action-start
 marker sanitizer, reflection-coerce salvage) — we target the Boyue-hosted
 OpenAI-compatible models (Qwen*, gpt-*, deepseek-*), which don't exhibit
 those pathologies.
@@ -44,18 +44,8 @@ from evaluation import thinking_model_patch  # noqa: F401  (import side effect)
 # packages. We insert their dirs so `from websearch_tools import web_search`
 # and `from sciverse_tools import literature_search` resolve.
 # ---------------------------------------------------------------------------
-_AGENTDEBUG_DIR = Path(
-    os.environ.get(
-        "AGENTDEBUG_DIR",
-        "/mnt/shared-storage-user/fengxinshun/AISci/AgentDebug/agdebugger",
-    )
-)
-_SCIVERSE_DIR = Path(
-    os.environ.get(
-        "SCIVERSE_DIR",
-        "/mnt/shared-storage-user/fengxinshun/AISci/sciverse",
-    )
-)
+_AGENTDEBUG_DIR = Path(os.environ.get("AGENTDEBUG_DIR", ""))
+_SCIVERSE_DIR = Path(os.environ.get("SCIVERSE_DIR", ""))
 
 for _p in (_AGENTDEBUG_DIR, _SCIVERSE_DIR):
     _s = str(_p)

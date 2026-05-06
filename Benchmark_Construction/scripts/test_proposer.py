@@ -8,7 +8,7 @@ prints a summary.
 Usage:
     python scripts/test_proposer.py \
         --chunks benchmark_runs/proteinlmbench_full_graph_v1/chunks.jsonl \
-        --output /tmp/datasetsa_proposer_test \
+        --output /tmp/pubmed_graph_proposer_test \
         --sample-size 10 \
         --no-grounding   # optional, skips sciverse/pubmed/mesh
 
@@ -37,7 +37,7 @@ from pubmed_graph.utils import read_jsonl  # noqa: E402
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--chunks", required=True)
-    parser.add_argument("--output", default="/tmp/datasetsa_proposer_test")
+    parser.add_argument("--output", default="/tmp/pubmed_graph_proposer_test")
     parser.add_argument("--sample-size", type=int, default=10)
     parser.add_argument("--evidence-threshold", type=int, default=1)
     parser.add_argument("--distinct-doc-threshold", type=int, default=1)
@@ -86,7 +86,7 @@ def main() -> None:
                 {
                     "min_hits": 1,
                     "min_distinct_sources": 1,
-                    "cache_dir": "/tmp/datasetsa_canonicalizer_cache",
+                    "cache_dir": "/tmp/pubmed_graph_canonicalizer_cache",
                     "sciverse": {"enabled": True, "num_results": 3, "timeout_seconds": 60},
                     "pubmed": {"enabled": True, "retmax": 2},
                     "mesh": {"enabled": True, "limit": 2},
@@ -104,7 +104,7 @@ def main() -> None:
         "distinct_doc_threshold": args.distinct_doc_threshold,
         "max_proposals_per_kind": args.max_proposals_per_kind,
         "require_grounding": canonicalizer is not None,
-        "cache_dir": "/tmp/datasetsa_proposer_cache",
+        "cache_dir": "/tmp/pubmed_graph_proposer_cache",
     }
     print(f"[info] proposer config = {proposer_cfg}")
     agent = OntologyProposerAgent(proposer_cfg, llm_client=llm_client, canonicalizer=canonicalizer)

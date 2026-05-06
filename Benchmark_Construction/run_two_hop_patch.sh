@@ -11,8 +11,8 @@
 
 set -euo pipefail
 
-REPO_ROOT="/mnt/shared-storage-user/ai4good2-share/fengxinshun/datasetsa"
-PY="/mnt/shared-storage-user/fengxinshun/miniconda3/miniconda3/envs/agentdebug/bin/python"
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PY="${PYTHON:-python}"
 
 cd "$REPO_ROOT"
 

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import shutil
 import sys
 from pathlib import Path
@@ -30,7 +31,7 @@ def _ensure_path(resolved: str | None, destination: str) -> str:
     shutil.copy2(resolved_p, destination_p)
     return destination
 
-DEFAULT_SCIVERSE_TOOLKIT_ROOT = "/mnt/shared-storage-user/fengxinshun/AISci/sciverse"
+DEFAULT_SCIVERSE_TOOLKIT_ROOT = os.environ.get("SCIVERSE_DIR", "")
 
 
 def _normalize_doi(value: object) -> str:

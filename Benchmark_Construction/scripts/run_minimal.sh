@@ -10,7 +10,7 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-PYTHON_BIN="${PYTHON_BIN:-/mnt/shared-storage-user/fengxinshun/miniconda3/miniconda3/envs/agentdebug/bin/python}"
+PYTHON_BIN="${PYTHON_BIN:-python}"
 CONFIG="$ROOT_DIR/pipeline_config.minimal.json"
 ENV_SCRIPT="$ROOT_DIR/triple_extraction_env.sh"
 OUT_DIR="${1:-$ROOT_DIR/pipeline_outputs_minimal}"

@@ -32,7 +32,7 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-PYTHON_BIN="${PYTHON_BIN:-/mnt/shared-storage-user/fengxinshun/miniconda3/miniconda3/envs/agentdebug/bin/python}"
+PYTHON_BIN="${PYTHON_BIN:-python}"
 BASE_CONFIG="$ROOT_DIR/pipeline_config.benchmark.json"
 ENV_SCRIPT="$ROOT_DIR/triple_extraction_env.sh"
 PIPELINE_ENTRY="$ROOT_DIR/literature_pipeline.py"
@@ -53,12 +53,12 @@ PROPOSER_SAMPLE_SIZE="${PROPOSER_SAMPLE_SIZE:-12}"
 PROPOSER_EVIDENCE_THRESHOLD="${PROPOSER_EVIDENCE_THRESHOLD:-1}"
 PROPOSER_DISTINCT_DOC_THRESHOLD="${PROPOSER_DISTINCT_DOC_THRESHOLD:-1}"
 PROPOSER_MAX_PER_KIND="${PROPOSER_MAX_PER_KIND:-6}"
-PROPOSER_CACHE_DIR="${PROPOSER_CACHE_DIR:-/tmp/datasetsa_subset_proposer_cache}"
-CANON_CACHE_DIR="${CANON_CACHE_DIR:-/tmp/datasetsa_subset_canon_cache}"
+PROPOSER_CACHE_DIR="${PROPOSER_CACHE_DIR:-/tmp/pubmed_graph_subset_proposer_cache}"
+CANON_CACHE_DIR="${CANON_CACHE_DIR:-/tmp/pubmed_graph_subset_canon_cache}"
 CANON_MIN_HITS="${CANON_MIN_HITS:-1}"
 CANON_MIN_SOURCES="${CANON_MIN_SOURCES:-1}"
 
-EMBEDDING_HOST="${EMBEDDING_HOST:-100.99.247.97}"
+EMBEDDING_HOST="${EMBEDDING_HOST:-<embedding-host>}"
 EMBEDDING_PORT="${EMBEDDING_PORT:-8765}"
 
 usage() {
@@ -97,7 +97,7 @@ done
 OUTPUT_DIR="${OUTPUT_DIR:-$ROOT_DIR/benchmark_runs/proteinlmbench_subset}"
 
 # Network policy:
-#   - The remote embedding service (default 100.99.247.97) is on the internal
+#   - The remote embedding service (default <embedding-host>) is on the internal
 #     pjlab network and must NOT go through any HTTP proxy.
 #   - PubMed (eutils.ncbi.nlm.nih.gov), MeSH (id.nlm.nih.gov), Crossref
 #     (api.crossref.org), bioRxiv/medRxiv (api.biorxiv.org) are public and

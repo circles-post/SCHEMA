@@ -20,8 +20,8 @@ XDG_CACHE_HOME="${AGDEBUGGER_XDG_CACHE_HOME:-${LOG_DIR}/.cache}"
 # ---------------------------------------------------------------------------
 # Runtime defaults
 # ---------------------------------------------------------------------------
-CONDA_ENV="${AGDEBUGGER_CONDA_ENV:-agentdebug}"
-CONDA_BASE="${CONDA_BASE:-/mnt/shared-storage-user/fengxinshun/miniconda3/miniconda3}"
+CONDA_ENV="${AGDEBUGGER_CONDA_ENV:-}"
+CONDA_BASE="${CONDA_BASE:-}"
 
 HOST="${AGDEBUGGER_HOST:-127.0.0.1}"
 PORT="${AGDEBUGGER_PORT:-8081}"
@@ -64,21 +64,21 @@ export MODEL_CLAIM="${MODEL_CLAIM:-intern-s1}"
 # Accepted values: true | false | auto
 export AGENTDEBUG_THINKING_MODE="${AGENTDEBUG_THINKING_MODE:-false}"
 
-# Non-Intern API
-export AGENTDEBUG_NON_INTERN_API_KEY="${AGENTDEBUG_NON_INTERN_API_KEY:-sk-ZnvhxhwyXok91ezpbDBcObLWa8GehlZtMaqnYT3ziVwhnBzC}"
-export AGENTDEBUG_NON_INTERN_BASE_URL="${AGENTDEBUG_NON_INTERN_BASE_URL:-http://34.13.73.248:3888/v1}"
+# Non-Intern API (set via env or shell before launching).
+export AGENTDEBUG_NON_INTERN_API_KEY="${AGENTDEBUG_NON_INTERN_API_KEY:-}"
+export AGENTDEBUG_NON_INTERN_BASE_URL="${AGENTDEBUG_NON_INTERN_BASE_URL:-}"
 
 # Intern API
-export AGENTDEBUG_INTERN_API_KEY="${AGENTDEBUG_INTERN_API_KEY:-sk-g6D6kNNW9eCNzucPWI7HwDaCKkToYx9ZQ422h7XP60qHIvyv}"
+export AGENTDEBUG_INTERN_API_KEY="${AGENTDEBUG_INTERN_API_KEY:-}"
 export AGENTDEBUG_INTERN_BASE_URL="${AGENTDEBUG_INTERN_BASE_URL:-https://chat.intern-ai.org.cn/api/v1/}"
 
 # Bright Data config for external-agent claim websearch.
 # Keep this aligned with run_with_models_debug.sh so both launchers use the
 # same evidence backend settings by default.
-export BRIGHT_DATA_API_KEY="${BRIGHT_DATA_API_KEY:-cf0ecaca-a28c-49f8-85df-d27e37cd86a8}"
-export BRIGHT_DATA_ZONE="${BRIGHT_DATA_ZONE:-serp_api1}"
+export BRIGHT_DATA_API_KEY="${BRIGHT_DATA_API_KEY:-}"
+export BRIGHT_DATA_ZONE="${BRIGHT_DATA_ZONE:-}"
 
-export TOOLUNIVERSE_DIR="${TOOLUNIVERSE_DIR:-/mnt/shared-storage-user/fengxinshun/AISci/ToolUniverse/}"
+export TOOLUNIVERSE_DIR="${TOOLUNIVERSE_DIR:-}"
 TOOLUNIVERSE_MODE="${AGDEBUGGER_TOOLUNIVERSE_MODE:-shared_http}"
 TOOLUNIVERSE_HOST="${AGDEBUGGER_TOOLUNIVERSE_HOST:-127.0.0.1}"
 TOOLUNIVERSE_PORT="${AGDEBUGGER_TOOLUNIVERSE_PORT:-7000}"

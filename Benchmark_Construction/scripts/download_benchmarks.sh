@@ -18,7 +18,7 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-PY_BIN="${PY_BIN:-/mnt/shared-storage-user/fengxinshun/miniconda3/miniconda3/envs/new_rl/bin/python}"
+PY_BIN="${PY_BIN:-python}"
 SCRIPT="$ROOT_DIR/scripts/download_benchmarks.py"
 
 MIRROR="${USE_HF_MIRROR:-false}"

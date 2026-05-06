@@ -11,11 +11,11 @@
 #   RJOB_COMPONENT_ID=1 RJOB_TOTAL=118 bash rjob.sh   # single component
 #   RJOB_START=300 RJOB_TOTAL=200 bash rjob.sh        # slice [300, 500)
 #
-# NOTE: do NOT add 34.13.73.248 (the non-intern LLM/embedding endpoint) to
-# no_proxy. It is a public IP only reachable via the kubebrain proxy; bypassing
-# the proxy causes every embedding call to time out after 30 s and kills the
-# websearch semantic filter (returns 0 bytes), starving the judge of evidence
-# and inflating `no_repairable_concepts` halts.
+# NOTE: do NOT add the non-intern LLM/embedding endpoint host to no_proxy.
+# In some clusters that endpoint is a public IP only reachable via an
+# upstream proxy; bypassing the proxy causes every embedding call to time
+# out after 30 s and kills the websearch semantic filter (returns 0 bytes),
+# starving the judge of evidence and inflating `no_repairable_concepts` halts.
 #
 # OPTIONAL — Path C Step 2 (LLM rewrite) knobs (default OFF):
 #   AGDEBUGGER_MULTI_ANCHOR_LLM_REWRITE   off|cross_claim_only|on_fused|always
@@ -97,8 +97,10 @@
 
 set -uo pipefail   # intentionally NOT -e: aggregation must still run even if the sweep errors
 
-cd /mnt/shared-storage-user/fengxinshun/AISci/AgentDebug/agdebugger
-source /mnt/shared-storage-user/fengxinshun/miniconda3/miniconda3/bin/activate agentdebug
+cd "$(dirname "${BASH_SOURCE[0]}")"
+if [[ -n "${CONDA_BASE:-}" && -n "${AGDEBUGGER_CONDA_ENV:-}" ]]; then
+    source "${CONDA_BASE}/bin/activate" "${AGDEBUGGER_CONDA_ENV}"
+fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 

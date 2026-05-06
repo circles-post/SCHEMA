@@ -41,7 +41,7 @@
 
 set -euo pipefail
 
-ROOT="/mnt/shared-storage-user/ai4good2-share/fengxinshun/datasetsa"
+ROOT="<repo-root>"
 
 : "${WORKERS:=2}"
 # All 7 tool-mode models run with the 4 retrieval tools but WITHOUT the

@@ -145,7 +145,7 @@ def main() -> None:
 
     client = InternChatClient({"model": "intern-s1-pro", "max_tokens": 1500, "thinking_mode": False})
 
-    out_root = Path("/tmp/datasetsa_proposer_diag")
+    out_root = Path("/tmp/pubmed_graph_proposer_diag")
     out_root.mkdir(parents=True, exist_ok=True)
 
     agent = OntologyProposerAgent(
@@ -155,7 +155,7 @@ def main() -> None:
             "distinct_doc_threshold": 1,
             "max_proposals_per_kind": 8,
             "require_grounding": False,
-            "cache_dir": "/tmp/datasetsa_proposer_diag_cache",
+            "cache_dir": "/tmp/pubmed_graph_proposer_diag_cache",
             "debug_dump_raw": True,
         },
         llm_client=client,

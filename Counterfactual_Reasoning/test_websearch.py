@@ -16,7 +16,7 @@ Environment variables required (one of the two search backends):
 
 Environment variables optional (for LLM-guided search and semantic filter):
     AGENTDEBUG_OPENAI_API_KEY   – OpenAI-compatible API key
-    AGENTDEBUG_OPENAI_BASE_URL  – Custom base URL (e.g. http://34.13.73.248:3888/v1)
+    AGENTDEBUG_OPENAI_BASE_URL  – Custom base URL of an OpenAI-compatible gateway
     AGENTDEBUG_MODEL_NAME       – Model name (default: gpt-4o-mini)
 """
 
@@ -39,13 +39,11 @@ from websearch import (
 # ---------------------------------------------------------------------------
 # Config (reuse agdebugger defaults)
 # ---------------------------------------------------------------------------
-SERPER_API_KEY      = os.environ.get("SERPER_API_KEY", "cf0ecaca-a28c-49f8-85df-d27e37cd86a8")
-BRIGHT_DATA_API_KEY = os.environ.get("BRIGHT_DATA_API_KEY", "cf0ecaca-a28c-49f8-85df-d27e37cd86a8")
-BRIGHT_DATA_ZONE    = os.environ.get("BRIGHT_DATA_ZONE", "serp_api1")
-OPENAI_API_KEY      = os.environ.get("AGENTDEBUG_OPENAI_API_KEY",
-                                     "sk-ZnvhxhwyXok91ezpbDBcObLWa8GehlZtMaqnYT3ziVwhnBzC")
-OPENAI_BASE_URL     = os.environ.get("AGENTDEBUG_OPENAI_BASE_URL",
-                                     "http://34.13.73.248:3888/v1")
+SERPER_API_KEY      = os.environ.get("SERPER_API_KEY", "")
+BRIGHT_DATA_API_KEY = os.environ.get("BRIGHT_DATA_API_KEY", "")
+BRIGHT_DATA_ZONE    = os.environ.get("BRIGHT_DATA_ZONE", "")
+OPENAI_API_KEY      = os.environ.get("AGENTDEBUG_OPENAI_API_KEY", "")
+OPENAI_BASE_URL     = os.environ.get("AGENTDEBUG_OPENAI_BASE_URL", "")
 MODEL_NAME          = os.environ.get("AGENTDEBUG_MODEL_NAME", "gpt-4o-mini")
 
 TEST_QUERY = "APP protein P05067 biological functions Alzheimer"
