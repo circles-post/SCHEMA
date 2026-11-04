@@ -16,6 +16,7 @@ from pathlib import Path
 from typing import Any, Iterable
 
 from .types import HaluResult, SampleRecord
+from evaluation.dataset import normalize_sample
 
 
 def _load_jsonl(path: Path) -> list[dict[str, Any]]:
@@ -53,7 +54,7 @@ def discover_model_dirs(runs_dir: Path) -> list[Path]:
     if not dirs:
         raise FileNotFoundError(
             f"No model subdirs with trajectory.jsonl + scored_results.jsonl found under {runs_dir}. "
-            "Re-run evaluation.runner with --emit-trajectory (default on)."
+            "Re-run evaluation.runner without --no-emit-trajectory (export is enabled by default)."
         )
     return dirs
 
@@ -71,7 +72,7 @@ def load_joined(
     scored_path = model_dir / "scored_results.jsonl"
     if not trajectory_path.is_file():
         raise FileNotFoundError(
-            f"Missing {trajectory_path}. Re-run evaluation.runner with --emit-trajectory."
+            f"Missing {trajectory_path}. Re-run evaluation.runner without --no-emit-trajectory."
         )
     if not scored_path.is_file():
         raise FileNotFoundError(
@@ -81,7 +82,7 @@ def load_joined(
     trajectories = _index_by_id(_load_jsonl(trajectory_path))
     answers = _index_by_id(_load_jsonl(answers_path))
     scored = _index_by_id(_load_jsonl(scored_path))
-    dataset_idx = _index_by_id(dataset)
+    dataset_idx = _index_by_id([normalize_sample(row) for row in dataset])
 
     out: list[SampleRecord] = []
     for sid, traj in trajectories.items():

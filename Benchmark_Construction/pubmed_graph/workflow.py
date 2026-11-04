@@ -312,3 +312,7 @@ def main() -> None:
 
     write_json(output_dir / "phase_summary.json", summary)
     print(json.dumps(summary, indent=2, ensure_ascii=False))
+
+
+if __name__ == "__main__":
+    main()

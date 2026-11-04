@@ -18,12 +18,9 @@ dependencies = [
 ]
 
 [tool.setuptools]
-packages = ["agdebugger", "agdebugger.web"]
-package-dir = { "" = "src", "agdebugger.web" = "frontend" }
+packages = ["agdebugger"]
+package-dir = { "" = "src" }
 include-package-data = true
-
-[tool.setuptools.package-data]
-"agdebugger.web" = ["../../frontend/dist/**"]
 
 [project.optional-dependencies]
 dev = ["ruff", "pyright", "mypy", "pytest", "pytest-asyncio", "types-Pillow"]

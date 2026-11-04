@@ -49,7 +49,7 @@ export EVAL_LITERATURE_FETCH_CONCURRENCY="$LIT_FETCH_WORKERS"
 : "${RUN_NAME:=$(date +%Y%m%d)}"
 : "${PY:=python}"
 
-ROOT="<repo-root>"
+ROOT="${SCHEMA_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
 
 # SUBSET="" → samples.jsonl;  SUBSET="balanced" → samples_balanced.jsonl;
 # any other <X>           → samples_<X>.jsonl (must exist next to samples.jsonl).
@@ -60,10 +60,10 @@ if [[ -n "$SUBSET" ]]; then
   TAG_SUFFIX="_${SUBSET}"
 fi
 
-BENCH_A_DATASET="$ROOT/benchmark_runs/proteinlmbench_full_graphbench/qgen_paired_protein_v2/$SAMPLES_FILE"
+BENCH_A_DATASET="${BENCH_A_DATASET:-$ROOT/data/protein_domain/$SAMPLES_FILE}"
 BENCH_A_TAG="paired_protein_v2${TAG_SUFFIX}"
 
-BENCH_B_DATASET="$ROOT/benchmark_runs/protein_plus_pathvqa_500_v3/qgen_paired_enhanced_v2/$SAMPLES_FILE"
+BENCH_B_DATASET="${BENCH_B_DATASET:-$ROOT/data/pathvqa_enhanced/$SAMPLES_FILE}"
 BENCH_B_TAG="paired_enhanced_v2${TAG_SUFFIX}"
 
 WHICH="${1:-}"
@@ -79,13 +79,13 @@ case "$WHICH" in
     ;;
 esac
 
-if [[ ! -f "$ROOT/evaluation/.env" ]]; then
-  echo "ERROR: $ROOT/evaluation/.env not found." >&2
+if [[ ! -f "$ROOT/Evaluation/.env" ]]; then
+  echo "ERROR: $ROOT/Evaluation/.env not found." >&2
   exit 2
 fi
 set +u
 # shellcheck disable=SC1091
-source <(grep -E '^BOYUE_API_KEY=' "$ROOT/evaluation/.env" | sed 's/^/export /')
+source <(grep -E '^BOYUE_API_KEY=' "$ROOT/Evaluation/.env" | sed 's/^/export /')
 set -u
 if [[ -z "${BOYUE_API_KEY:-}" ]]; then
   echo "ERROR: BOYUE_API_KEY missing in evaluation/.env." >&2
@@ -101,7 +101,7 @@ _LIMIT_FLAG=""
 
 run_one_bench() {
   local tag="$1" dataset="$2"
-  local eval_out="$ROOT/evaluation/eval_runs/${tag}__${RUN_NAME}"
+  local eval_out="$ROOT/Evaluation/eval_runs/${tag}__${RUN_NAME}"
 
   if [[ ! -f "$dataset" ]]; then
     echo "ERROR: dataset not found: $dataset" >&2

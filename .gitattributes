@@ -1,0 +1,6 @@
+/tests export-ignore
+/tests/** export-ignore
+/.pytest_cache export-ignore
+/.pytest_cache/** export-ignore
+/.venv export-ignore
+/.venv/** export-ignore

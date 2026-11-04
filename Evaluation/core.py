@@ -15,6 +15,7 @@ from .scorers import (
     score_vqa,
 )
 from .types import EvalResult
+from .dataset import load_samples, normalize_sample
 
 
 _MULTICHOICE_TYPES = {"claim_choice", "one_hop_tail", "two_hop_tail"}
@@ -23,8 +24,8 @@ _DEFAULT_PASS_THRESHOLD = 0.5
 
 def _load_samples(samples: list[dict] | str | Path) -> list[dict]:
     if isinstance(samples, (str, Path)):
-        return [json.loads(line) for line in open(samples, encoding="utf-8")]
-    return list(samples)
+        return load_samples(samples)
+    return [normalize_sample(sample) for sample in samples]
 
 
 def _extract_tier(sample: dict) -> tuple[str, float]:
@@ -57,6 +58,7 @@ def score_one(
       * essay:             str (needs ``judge_model_config``)
       * experiment_code:   str (the completed main_code)
     """
+    sample = normalize_sample(sample)
     qtype = sample.get("question_type", "")
     sample_id = sample.get("sample_id", "")
     tier, weight = _extract_tier(sample)

@@ -14,6 +14,10 @@ build/
 dist/
 *.egg-info/
 .pytest_cache/
+.venv/
+
+# Local release verification; excluded from the public code upload.
+/tests/
 
 # run artifacts (regeneratable)
 **/tmp_*/

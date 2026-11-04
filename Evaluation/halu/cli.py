@@ -12,10 +12,9 @@ Per-model flow:
      async; judge is sync behind ``asyncio.to_thread``.
   6. Compute per-sample HR/HS/HF, aggregate, write halu_results.jsonl + halu_summary.json.
 
-Phase-1 caveat: layers 2-4 of the evidence chain are stubbed to return []; only
-``supporting_chunk`` matches. Concepts not mentioned in any supporting chunk
-end up with empty evidence and are verdict'd as "unverifiable" (short-circuit
-in ``BucketJudge``, no LLM call).
+The graph layer requires a matching GraphML snapshot; web and literature
+layers require configured retrieval adapters. If no layer returns evidence,
+the bucket is marked "unverifiable" without a judge API call.
 """
 
 from __future__ import annotations
@@ -48,6 +47,7 @@ from evaluation.halu.io import discover_model_dirs, load_joined, write_results
 from evaluation.halu.judge import BucketJudge
 from evaluation.halu.trajectory import steps_from_trajectory
 from evaluation.halu.types import HaluResult, SampleRecord
+from evaluation.dataset import load_samples
 
 
 # ---------------------------------------------------------------------------
@@ -275,7 +275,7 @@ def _parse_args() -> argparse.Namespace:
     ap.add_argument("--extractor-concurrency", type=int, default=4)
     ap.add_argument("--judge-concurrency", type=int, default=10)
     ap.add_argument("--evidence-chain", default="graph,web,literature",
-                    help="Layers tried AFTER supporting_chunk, in order (phase-1: stubs).")
+                    help="Layers tried AFTER supporting_chunk, in order; configure the corresponding graph/services.")
     ap.add_argument("--concept-cluster-threshold", type=float, default=0.85)
     ap.add_argument("--no-cache", action="store_true")
     ap.add_argument("--allow-self-judge", action="store_true",
@@ -335,8 +335,11 @@ async def _main_async() -> int:
             file=sys.stderr,
         )
         return 2
-    ext_model = (args.extractor_model or os.environ.get("HALU_EXTRACTOR_MODEL", "intern-s1-pro")).strip()
-    jdg_model = (args.judge_model or os.environ.get("HALU_JUDGE_MODEL", "intern-s1-pro")).strip()
+    ext_model = (args.extractor_model or os.environ.get("HALU_EXTRACTOR_MODEL") or "").strip() or "intern-s1-pro"
+    jdg_model = (args.judge_model or os.environ.get("HALU_JUDGE_MODEL") or "").strip() or "intern-s1-pro"
+    # Propagate effective model names to requests, cache keys, and summaries.
+    args.extractor_model = ext_model
+    args.judge_model = jdg_model
 
     # Proxy fix for Boyue host (same as runner.py)
     for url in {ext_base, jdg_base}:
@@ -377,12 +380,7 @@ async def _main_async() -> int:
             return 3
 
     # Load dataset ONCE
-    dataset: list[dict[str, Any]] = []
-    with open(args.dataset, encoding="utf-8") as fh:
-        for line in fh:
-            line = line.strip()
-            if line:
-                dataset.append(json.loads(line))
+    dataset = load_samples(args.dataset)
 
     print(
         f"[halu] runs_dir={runs_dir}  dataset_n={len(dataset)}  models={[d.name for d in model_dirs]}  "

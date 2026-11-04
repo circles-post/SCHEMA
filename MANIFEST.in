@@ -1,0 +1,4 @@
+prune tests
+prune .pytest_cache
+prune .venv
+global-exclude __pycache__ *.py[cod] .env

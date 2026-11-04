@@ -9,16 +9,22 @@ import requests
 from .models import PaperRecord
 from .utils import cosine_similarity, normalize_keyword, tokenize
 
-try:
-    import torch
-    from transformers import AutoModel, AutoTokenizer
-except Exception as exc:  # pragma: no cover
-    torch = None
-    AutoModel = None
-    AutoTokenizer = None
-    TRANSFORMER_IMPORT_ERROR = exc
-else:  # pragma: no cover
-    TRANSFORMER_IMPORT_ERROR = None
+torch = None
+AutoModel = None
+AutoTokenizer = None
+
+
+def _load_local_embedding_dependencies() -> None:
+    """Load heavy optional libraries only when local embeddings are used."""
+    global torch, AutoModel, AutoTokenizer
+    if torch is not None and AutoModel is not None and AutoTokenizer is not None:
+        return
+    try:
+        import torch as torch_module
+        from transformers import AutoModel as model_cls, AutoTokenizer as tokenizer_cls
+    except Exception as exc:
+        raise ImportError("Install the embeddings extra to use local embedding models") from exc
+    torch, AutoModel, AutoTokenizer = torch_module, model_cls, tokenizer_cls
 
 
 @dataclass
@@ -111,12 +117,9 @@ class HFTextEmbedder:
             return
         if self._tokenizer is not None and self._model is not None:
             return
-        if TRANSFORMER_IMPORT_ERROR is not None or torch is None or AutoTokenizer is None or AutoModel is None:
-            raise ImportError(
-                f"transformers/torch are required for local embedding models: {TRANSFORMER_IMPORT_ERROR}"
-            )
         if not Path(self.model_path).exists():
             raise FileNotFoundError(f"Model path does not exist: {self.model_path}")
+        _load_local_embedding_dependencies()
         self._tokenizer = AutoTokenizer.from_pretrained(self.model_path, local_files_only=True)
         self._model = AutoModel.from_pretrained(self.model_path, local_files_only=True)
         self._model.eval()

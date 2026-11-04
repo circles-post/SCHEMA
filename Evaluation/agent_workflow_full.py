@@ -44,7 +44,10 @@ from evaluation import thinking_model_patch  # noqa: F401  (import side effect)
 # packages. We insert their dirs so `from websearch_tools import web_search`
 # and `from sciverse_tools import literature_search` resolve.
 # ---------------------------------------------------------------------------
-_AGENTDEBUG_DIR = Path(os.environ.get("AGENTDEBUG_DIR", ""))
+_AGENTDEBUG_DIR = Path(
+    os.environ.get("AGENTDEBUG_DIR")
+    or Path(__file__).resolve().parents[1] / "Counterfactual_Reasoning"
+)
 _SCIVERSE_DIR = Path(os.environ.get("SCIVERSE_DIR", ""))
 
 for _p in (_AGENTDEBUG_DIR, _SCIVERSE_DIR):
@@ -64,8 +67,17 @@ try:
 except ImportError:
     pass
 
-from sciverse_tools import literature_search as _literature_search_raw  # noqa: E402
-from sciverse_tools import sciverse_fetch_markdown  # noqa: E402
+try:
+    from sciverse_tools import literature_search as _literature_search_raw
+    from sciverse_tools import sciverse_fetch_markdown
+except ModuleNotFoundError as exc:
+    if exc.name != "sciverse_tools":
+        raise
+    raise RuntimeError(
+        "Tool-enabled evaluation requires the external sciverse_tools.py adapter. "
+        "Set SCIVERSE_DIR to its directory before starting Python, or use "
+        "--no-tools for closed-book evaluation."
+    ) from exc
 from websearch_tools import web_fetch, web_search  # noqa: E402
 
 

@@ -20,7 +20,7 @@ SCHEMA evaluates the reliability of scientific AI agents beyond their final answ
 | `Evaluation/halu/` | Claim extraction, evidence gathering, hallucination judging, and aggregation | `cli.py` |
 | `Counterfactual_Reasoning/` | Claim analysis and AGDebugger-based trajectory interventions | `external_agent/cli.py`, `run_dataset_autodebug.py` |
 
-The examples below describe the interfaces in this source snapshot. Full agent evaluation requires external model and retrieval services. Counterfactual replay also requires additional components identified below. This repository does not include a locked environment or the complete original experiment artifacts; the commands are starting points for running the implementation, not a guarantee of reproducing the paper's numbers with current APIs.
+The examples below describe the interfaces in this source snapshot. Full agent evaluation requires external model and retrieval services. Counterfactual replay also requires additional components identified below. The AutoGen dependencies are pinned to the version used for offline release checks; other dependencies are not fully locked. The complete original experiment artifacts are not bundled, and current APIs may not reproduce the paper's numbers exactly.
 
 ## Environment setup
 
@@ -30,13 +30,11 @@ Use Python 3.10 or later and a Linux/macOS shell. Run the following from the rep
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip
-python -m pip install \
-  numpy scipy networkx requests pyyaml python-dotenv openai \
-  huggingface_hub httpx trafilatura \
-  'autogen-agentchat>=0.4.0' 'autogen-ext[openai,mcp]>=0.4.0'
+python -m pip install -e '.[evaluation,data]'
+export SCHEMA_ROOT="$(pwd)"
 ```
 
-This is a dependency starting point based on the source imports, not a tested version lock. Additional dependencies depend on the workflow:
+The editable installation exposes the lowercase Python packages used by the source without renaming directories or creating import aliases. Additional dependencies depend on the workflow:
 
 | Workflow | Additional requirements |
 | --- | --- |
@@ -47,20 +45,18 @@ This is a dependency starting point based on the source imports, not a tested ve
 | Optional ToolUniverse tools | `tooluniverse` and the dependencies of the enabled tools |
 | AGDebugger backend | Dependencies listed in `Counterfactual_Reasoning/pyproject.toml`, plus the missing components described in the counterfactual section |
 
-### Python import paths
+### Command-line entry points
 
-The source imports lowercase package names (`evaluation`, `question_generation`), while the release directories use capitalized names. Create temporary import aliases and expose the graph package before using the module commands below:
+After installation, these commands are available from any working directory:
 
 ```bash
-export SCHEMA_ROOT="$(pwd)"
-export SCHEMA_IMPORTS="$(mktemp -d /tmp/schema-imports.XXXXXX)"
-ln -s "$SCHEMA_ROOT/Evaluation" "$SCHEMA_IMPORTS/evaluation"
-ln -s "$SCHEMA_ROOT/Question_Generation" "$SCHEMA_IMPORTS/question_generation"
-export PYTHONPATH="$SCHEMA_IMPORTS:$SCHEMA_ROOT/Benchmark_Construction:$SCHEMA_ROOT/Counterfactual_Reasoning${PYTHONPATH:+:$PYTHONPATH}"
-export AGENTDEBUG_DIR="$SCHEMA_ROOT/Counterfactual_Reasoning"
+schema-evaluate --help
+schema-hallucinations --help
+schema-build-graph --help
+schema-generate --help
 ```
 
-Repeat this setup in a new shell. These aliases leave the source directories unchanged. Some bundled shell scripts still contain `<repo-root>`, provider URL placeholders, and paths from the original experiments. Configure those before using them; the direct Python entry points below make the required inputs explicit.
+Run the examples below from the repository root so their relative data paths resolve. `Evaluation/scripts/run_eval.sh` and `run_bench.sh` now locate the checkout automatically and accept `BENCH_A_DATASET` / `BENCH_B_DATASET` overrides; `run_bench.sh` also accepts `BENCH_A_GRAPH` / `BENCH_B_GRAPH`. Other historical launch scripts may still contain author-specific path or service placeholders. Prefer the direct CLI examples unless you have configured a particular launcher.
 
 ## Dataset
 
@@ -75,18 +71,14 @@ Both released subsets are text-only and cover `claim_choice`, `boolean_support`,
 
 ### Download and prepare evaluation inputs
 
-The public JSONL files encode nested fields as JSON strings. The evaluator expects those fields to be decoded dictionaries/lists. The following downloads the question files and writes compatible inputs without changing sample IDs or question content:
+The public JSONL files encode nested fields as JSON strings. The evaluator now accepts both this public format and the internally generated dictionary/list format, decoding the nested fields automatically. Download the question files directly:
 
 ```bash
 python - <<'PY'
-import json
+import shutil
 from pathlib import Path
 from huggingface_hub import hf_hub_download
 
-nested_fields = (
-    "answer", "options", "subgraph", "provenance",
-    "grounding", "quality", "metadata",
-)
 for subset in ("protein_domain", "pathvqa_enhanced"):
     source = hf_hub_download(
         repo_id="XsF2001/SCHEMA",
@@ -95,18 +87,8 @@ for subset in ("protein_domain", "pathvqa_enhanced"):
     )
     target = Path("data") / subset / "samples.jsonl"
     target.parent.mkdir(parents=True, exist_ok=True)
-    count = 0
-    with open(source, encoding="utf-8") as src, target.open("w", encoding="utf-8") as dst:
-        for line in src:
-            if not line.strip():
-                continue
-            row = json.loads(line)
-            for field in nested_fields:
-                if isinstance(row.get(field), str):
-                    row[field] = json.loads(row[field])
-            dst.write(json.dumps(row, ensure_ascii=False) + "\n")
-            count += 1
-    print(f"{target}: {count} questions")
+    shutil.copyfile(source, target)
+    print(target)
 PY
 ```
 
@@ -126,7 +108,7 @@ Copy `Evaluation/.env.example` to `Evaluation/.env` if you do not already have a
 | `QG_SANDBOX_HOST`, `QG_SANDBOX_PORT` | Remote sandbox for experimental code questions |
 | `EMBEDDING_SERVICE_URL` or `BGE_MODEL_PATH` | Remote embeddings or local model weights for graph matching |
 
-The last three configuration groups are not all present in the example dotenv file; add them when needed. For the shell examples below, use shell-compatible assignments in your local dotenv file and load them before starting Python:
+The CLI loads its selected `--env-file` automatically. The hallucination command below also expands endpoint variables in the shell; for that example, use shell-compatible assignments and load the same file first:
 
 ```bash
 set -a
@@ -134,22 +116,17 @@ source Evaluation/.env
 set +a
 ```
 
-Loading configuration before Python starts matters because some retrieval and sandbox settings are read at import time.
+The runner loads retrieval dependencies after dotenv configuration and refreshes sandbox settings before scoring. Shell sourcing is not required for a normal `evaluation.runner --env-file ...` invocation.
 
-**External literature adapter:** the checkout does not contain `sciverse_tools.py`. The agent runner imports it even with `--no-tools`. To run `evaluation.runner`, supply the compatible adapter and its dependencies, then set:
+**External literature adapter:** tool-enabled evaluation needs `sciverse_tools.py`, which is not included in this checkout. Set `SCIVERSE_DIR` in `Evaluation/.env` to the directory containing the compatible adapter and install its dependencies. It must provide `literature_search` and `sciverse_fetch_markdown`. The web adapter defaults to the bundled `Counterfactual_Reasoning/websearch_tools.py`; `AGENTDEBUG_DIR` can override its location.
 
-```bash
-export SCIVERSE_DIR="/absolute/path/to/directory/containing/sciverse_tools.py"
-export PYTHONPATH="$SCIVERSE_DIR:$PYTHONPATH"
-```
+Closed-book evaluation (`--no-tools`) does not import or require these retrieval adapters. A tool-enabled run reports an actionable error if the SciVerse adapter is unavailable.
 
-The adapter must provide `literature_search` and `sciverse_fetch_markdown`. The local web adapter is `Counterfactual_Reasoning/websearch_tools.py`.
-
-Some models have endpoint overrides in `Evaluation/runner.py`. In particular, the Doubao, Llama, and Grok entries contain a provider URL placeholder. Replace it through `BOYUE_MODEL_OVERRIDES="model_id=https://your-provider.example/v1,..."` for those model IDs. Intern-S1-Pro has a separate endpoint/key route. Check `_DEFAULT_MODEL_OVERRIDES` before launching a cohort.
+Agents use `BOYUE_BASE_URL` by default. Model-specific URLs can be configured with `BOYUE_MODEL_OVERRIDES="model_id=https://your-provider.example/v1,..."`. Intern-S1-Pro retains its separate endpoint/key route in `_DEFAULT_MODEL_OVERRIDES`; check that route when using an alternative provider. No placeholder provider URL is used for Doubao, Llama, or Grok.
 
 ## Run agent evaluation
 
-After configuring the services and import paths, start with a small run:
+After installation and service configuration, start with a small run:
 
 ```bash
 python -m evaluation.runner \
@@ -185,7 +162,7 @@ Answer scoring is type-specific: objective questions use rule-based scoring, ess
 
 ## Evaluate trajectory hallucinations
 
-Use the same decoded dataset and the agent outputs above. The example evaluates GPT-4o trajectories with Intern-S1-Pro as judge to avoid judging the model with itself; replace the extractor with another accessible model as appropriate.
+Use the same dataset and the agent outputs above. The example evaluates GPT-4o trajectories with Intern-S1-Pro as judge to avoid judging the model with itself; replace the extractor with another accessible model as appropriate.
 
 ```bash
 python -m evaluation.halu.cli \
@@ -261,6 +238,7 @@ This example deliberately uses rule-only validation for a workflow check; it is 
 For standalone claim analysis, provide a text file containing an agent response and a separate evidence file, then run from the repository root with model credentials exported:
 
 ```bash
+PYTHONPATH="$SCHEMA_ROOT/Counterfactual_Reasoning${PYTHONPATH:+:$PYTHONPATH}" \
 python -m external_agent.cli \
   --task research_questions \
   --text-file /absolute/path/to/agent_response.txt \
@@ -270,7 +248,7 @@ python -m external_agent.cli \
 
 This interface reads `OPENAI_API_KEY` / `OPENAI_BASE_URL` or the corresponding `AGENTDEBUG_OPENAI_*` variables and prints extracted claims and judgments as JSON. It performs claim analysis; full intervention-and-replay experiments use `run_dataset_autodebug.py` and the backend.
 
-**Full replay setup is incomplete in this snapshot:** `run_dataset_autodebug.py` imports `browse_bio_graph_cluster_examples.py` from `AGDEBUGGER_DATASETS_DIR`, but that helper and its original component-based dataset/graph inputs are not included. Supply the matching helper, dataset artifacts, and service configuration before using the batch replay workflow. The HF question files are not a direct replacement for these component-based inputs. Separately, the package configuration and upstream UI installation instructions reference a `frontend/` directory that is absent; the backend supports running without built UI assets, but the packaged UI installation requires those files.
+**Full replay setup is incomplete in this snapshot:** `run_dataset_autodebug.py` imports `browse_bio_graph_cluster_examples.py` from `AGDEBUGGER_DATASETS_DIR`, but that helper and its original component-based dataset/graph inputs are not included. Supply the matching helper, dataset artifacts, and service configuration before using the batch replay workflow. The HF question files are not a direct replacement for these component-based inputs. The backend can be installed with `python -m pip install -e ./Counterfactual_Reasoning` and run without UI assets. The upstream README's frontend build instructions still require the absent `frontend/` source; a browser UI is not bundled.
 
 ## Reproducibility notes
 

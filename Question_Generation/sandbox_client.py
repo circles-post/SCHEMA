@@ -76,6 +76,16 @@ def configure_sandbox(host: str, port: int = 8080, timeout: float | None = None)
     _endpoint_set = False  # force re-binding on next call
 
 
+def configure_sandbox_from_env() -> None:
+    """Refresh settings after a CLI loads its selected dotenv file."""
+    if any(key in os.environ for key in ("QG_SANDBOX_HOST", "QG_SANDBOX_PORT", "QG_SANDBOX_TIMEOUT")):
+        configure_sandbox(
+            os.environ.get("QG_SANDBOX_HOST", SANDBOX_HOST),
+            int(os.environ.get("QG_SANDBOX_PORT") or SANDBOX_PORT),
+            float(os.environ.get("QG_SANDBOX_TIMEOUT") or DEFAULT_TIMEOUT),
+        )
+
+
 def _add_to_no_proxy(host: str) -> None:
     """Ensure *host* appears in both NO_PROXY and no_proxy env vars.
 

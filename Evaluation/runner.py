@@ -63,9 +63,6 @@ _DIRECT_CONNECT_HOSTS = tuple(
 #   * Models hosted on an entirely different vendor — different base URL AND
 #     different API key (intern-s1-pro on chat.intern-ai.org.cn).
 _DEFAULT_MODEL_OVERRIDES: dict[str, dict[str, str]] = {
-    "doubao-seed-2-0-pro-260215": {"base_url": "<boyue-https-base-url>"},
-    "llama-4-scout":              {"base_url": "<boyue-https-base-url>"},
-    "grok-4-1-fast-reasoning":    {"base_url": "<boyue-https-base-url>"},
     "intern-s1-pro":              {"base_url": "https://chat.intern-ai.org.cn/api/v1",
                                    "api_key_env": "INTERN_API_KEY"},
 }
@@ -137,7 +134,7 @@ from autogen_core import CancellationToken
 
 from evaluation import aggregate, score_many
 from evaluation.agent_workflow import BoyueModelConfig, build_agent_team
-from evaluation.agent_workflow_full import BoyueFullAgentConfig, build_agent_team_full
+from evaluation.dataset import load_samples
 from evaluation.prompt_builder import build_prompt
 
 
@@ -221,13 +218,7 @@ def _serialize_trajectory(messages: Iterable[Any]) -> list[dict[str, Any]]:
 
 
 def _load_samples(path: str | Path) -> list[dict[str, Any]]:
-    out: list[dict[str, Any]] = []
-    with open(path, encoding="utf-8") as fh:
-        for line in fh:
-            line = line.strip()
-            if line:
-                out.append(json.loads(line))
-    return out
+    return load_samples(path)
 
 
 def _extract_answer(messages: Iterable[Any]) -> tuple[str, str]:
@@ -371,6 +362,10 @@ async def _build_team(
     max_messages: int, max_tool_iterations: int,
 ) -> Any:
     if use_tools:
+        # Defer retrieval imports until dotenv is loaded. Closed-book runs
+        # do not require the external literature adapter.
+        from evaluation.agent_workflow_full import BoyueFullAgentConfig, build_agent_team_full
+
         eff_use_tu, reflect = _model_quirks(model, requested_tooluniverse=use_tooluniverse)
         if eff_use_tu != use_tooluniverse:
             print(f"  [{model}] auto-disabling ToolUniverse (model is in _NO_TOOLUNIVERSE_PATTERNS).", flush=True)
@@ -710,6 +705,9 @@ async def _main_async() -> int:
     args = _parse_args()
     # override=True so re-running after editing .env actually picks up changes.
     load_dotenv(args.env_file, override=True)
+    from question_generation.sandbox_client import configure_sandbox_from_env
+
+    configure_sandbox_from_env()
 
     base_url = os.environ.get("BOYUE_BASE_URL", "").strip()
     if not base_url:

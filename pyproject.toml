@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "schema-scientific-evaluation"
+version = "0.1.0"
+description = "Topology-aware evaluation of scientific agent hallucinations"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy", "scipy", "networkx", "requests", "PyYAML",
+    "python-dotenv", "openai",
+]
+
+[project.optional-dependencies]
+evaluation = [
+    "autogen-agentchat==0.7.5", "autogen-ext[openai,mcp]==0.7.5",
+    "httpx", "trafilatura",
+]
+data = ["huggingface_hub", "datasets"]
+embeddings = ["torch", "transformers"]
+pdf = ["pdfplumber", "pypdf", "pymupdf"]
+dev = ["pytest"]
+
+[project.scripts]
+schema-evaluate = "evaluation.runner:main"
+schema-hallucinations = "evaluation.halu.cli:main"
+schema-build-graph = "pubmed_graph.workflow:main"
+schema-generate = "question_generation.cli:main"
+
+[tool.setuptools]
+packages = [
+    "evaluation", "evaluation.halu", "pubmed_graph", "question_generation",
+    "question_generation.experiments", "question_generation.experiments.blueprints",
+    "question_generation.scripts",
+]
+include-package-data = false
+
+[tool.setuptools.package-dir]
+evaluation = "Evaluation"
+question_generation = "Question_Generation"
+pubmed_graph = "Benchmark_Construction/pubmed_graph"
+
+[tool.setuptools.package-data]
+pubmed_graph = ["ontology.yaml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
