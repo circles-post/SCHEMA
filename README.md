@@ -278,9 +278,3 @@ If you use SCHEMA, please cite the paper:
   url    = {https://github.com/circles-post/SCHEMA}
 }
 ```
-
-## Acknowledgements and contact
-
-This work was supported by the Shanghai Oriental Talents Program – Top-notch Project (Grant No. BJZH2025127). Xinshun Feng's work was done during an internship at Shanghai Artificial Intelligence Laboratory.
-
-For questions about the paper or this release, contact **Lijun Li** at **lilijun@pjlab.org.cn**, or open an issue in the [code repository](https://github.com/circles-post/SCHEMA/issues).
